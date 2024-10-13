@@ -1,0 +1,64 @@
+services:
+  #NGINX
+  nginx:
+    restart: unless-stopped
+    image: nginx:alpine
+    ports:
+      - 80:80
+    volumes:
+      - nginx-data:/var:/var/www/var
+    depends_on:
+      - php
+    container_name: globnot_nginx
+
+  #PHP
+  php:
+    image: php:8.3.0-fpm
+    volumes:
+      - php_data:/var/www/html
+    container_name: globnot_php
+    
+  #Database
+  database:
+    restart: unless-stopped
+    image: postgres:17-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: globnot
+      POSTGRES_USER: globnot
+      POSTGRES_DB: globnot
+      TZ: Europe/Paris
+      PGTZ: Europe/Paris
+    volumes:
+      - database-data:/var/lib/postgresql/data
+      - ./var:/var/www/var
+    container_name: globnot_database
+
+  #Adminer
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+    volumes:
+      - adminer-data:/var:/var/www/var
+    container_name: globnot_adminer
+
+  #Symfony Mailer
+  mailer:
+    image: axllent/mailpit
+    ports:
+      - "1025"
+      - "8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    container_name: globnot_mailer
+
+volumes:
+  nginx-data:
+  php_data:
+  database-data:
+  adminer-data:
+

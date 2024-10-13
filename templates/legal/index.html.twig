@@ -1,0 +1,82 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}
+    {{ parent() }}
+    -
+    Legal
+{% endblock %}
+
+{% block body %}
+
+    {% include 'partials/_header.html.twig' with {'title': 'Privacy Policy', 'description': 'Your rights, your privacy.'} %}
+
+    <div
+            class="mx-auto mt-12 max-w-4xl rounded-lg border p-12 bg-background">
+
+        <!-- Editor -->
+        <h2 class="mt-2 text-3xl font-semibold">Editor</h2>
+        <p class="mt-4 text-muted-foreground">Built by
+            <a class="font-medium underline underline-offset-4" href="https://x.com/globnotstream" rel="noreferrer"
+               target="_blank">globnot</a>. The source code is available on
+            <a class="font-medium underline underline-offset-4" href="#" rel="noreferrer" target="_blank">GitHub</a>
+            Soon.
+        </p>
+
+        <!-- Hosting -->
+        <h2 class="mt-8 text-3xl font-semibold">Hosting</h2>
+        <ul class="mt-4 list-none text-muted-foreground">
+            <li>The site is hosted on the servers of Platform.sh SAS</li>
+            <li>SAS with a capital of €717,519.10</li>
+            <li>Headquarters: 22 rue de Palestro - 75002 Paris - France</li>
+            <li>RCS Paris 521 496 59</li>
+        </ul>
+
+        <!-- Domain -->
+        <h2 class="mt-8 text-3xl font-semibold">Domain</h2>
+        <ul class="mt-4 list-none text-muted-foreground">
+            <li>The domain name is provided by OVH</li>
+            <li>SAS with a capital of €10,069,020</li>
+            <li>Headquarters: 2 rue Kellermann - 59100 Roubaix - France</li>
+            <li>RCS Roubaix / Tourcoing 424 761 419 00011</li>
+            <li>Phone number: 08 203 203 63 - €0.118/min</li>
+        </ul>
+
+        <!-- Privacy Policy -->
+        <h2 class="mt-8 text-3xl font-semibold">Privacy Policy</h2>
+        <p class="mt-4 text-muted-foreground">
+            The information collected on this site is recorded in a computerized file by
+            <a class="font-medium underline underline-offset-4" href="https://x.com/globnotstream" rel="noreferrer"
+               target="_blank">globnot.</a>
+            In accordance with the French data protection law, you can exercise your right to access and rectify your
+            data by contacting them.
+        </p>
+
+        <!-- Cookies -->
+        <h2 class="mt-8 text-3xl font-semibold">Cookies</h2>
+        <p class="mt-4 text-muted-foreground">
+            These cookies allow the main services of the site to function optimally. You can technically block them
+            using your browser settings, but your experience on the site may be degraded.
+        </p>
+        <p class="text-muted-foreground">
+            We use Matomo Analytics configured according to CNIL recommendations, so we are exempt from cookie consent
+            requests. Here is
+            <a class="font-medium underline underline-offset-4"
+               href="https://www.cnil.fr/fr/cookies-et-autres-traceurs/regles/cookies-solutions-pour-les-outils-de-mesure-daudience"
+               rel="noreferrer" target="_blank">the CNIL program
+                framework.</a>
+        </p>
+
+        <!-- Matomo -->
+        <h2 class="mt-8 text-3xl font-semibold">Matomo</h2>
+        <p class="mt-4 text-muted-foreground">
+            We use Matomo Analytics to analyze site usage and help improve the user experience. Matomo collects
+            anonymous data about user navigation on the site, such as the number of visitors, the most popular pages,
+            and the duration of the visit. No personal data is collected and all analytical data is stored on our own
+            servers, in accordance with EU data protection regulations.
+        </p>
+        <div id="matomo-opt-out"></div>
+        <script src="https://trackerlol.matomo.cloud/index.php?module=CoreAdminHome&action=optOutJS&divId=matomo-opt-out&language=auto&showIntro=1"></script>
+
+    </div>
+
+{% endblock %}
