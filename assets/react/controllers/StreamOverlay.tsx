@@ -1,27 +1,15 @@
 import * as React from "react";
-import { Button } from '@/components/ui/button'
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select'
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function StreamOverlay() {
     return (
-        <Card
-            className="bg-transparent shadow-xl shadow-main w-[350px] h-[350px]">
+        <Card className="flex flex-col justify-end bg-transparent shadow-xl w-[350px] h-[350px] shadow-main">
+            <div className="flex justify-end mb-4 me-4">
+                <Button className="w-fit">
+                    Default
+                </Button>
+            </div>
         </Card>
-    )
+    );
 }
