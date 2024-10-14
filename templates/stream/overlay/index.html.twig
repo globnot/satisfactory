@@ -1,0 +1,24 @@
+{% extends 'stream/overlay/base.html.twig' %}
+
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+	<div class="w-[1920px] h-[1080px] mx-auto" {{ react_component('StreamOverlay') }}>
+		<twig:ux:icon name="line-md:loading-loop" class="w-10"/>
+	</div>
+
+	<div class="text-4xl font-bold text-blue-500 neon-blue">
+		Neon Shiny Text
+	</div>
+
+	<button class="px-6 py-3 text-white bg-blue-500 rounded-lg shadow-lg neon-blue">
+		Neon Shiny Button
+	</button>
+
+	<span class="text-pink-500 neon-effect">Fluo Rose</span>
+
+
+{% endblock %}

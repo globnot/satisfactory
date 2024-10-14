@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,7 +15,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Home, Mail, Scale, User } from "lucide-react";
-import * as React from "react";
 
 export default function Menu({ path }) {
   return (
