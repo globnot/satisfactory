@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Controller\Twitch;
 
 use App\Application\Interface\Twitch\TwitchApiInterface;
+use App\Infrastructure\Service\Twitch\TwitchGetSubscriberCountService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +13,7 @@ class TwitchOverlayController extends AbstractController
 {
     public function __construct(
         private TwitchApiInterface $twitchApiInterface,
+        private TwitchGetSubscriberCountService $twitchGetSubscriberCountService,
     ) {
     }
 
@@ -44,7 +46,7 @@ class TwitchOverlayController extends AbstractController
         }
 
         try {
-            $subscriberCount = $this->twitchApiInterface->getSubscriberCount($accessToken);
+            $subscriberCount = $this->twitchGetSubscriberCountService->getSubscriberCount($accessToken);
         } catch (\Exception $e) {
             // Gérer les erreurs, par exemple en affichant un message à l'utilisateur
             return new Response('Erreur lors de la récupération des abonnés.', Response::HTTP_INTERNAL_SERVER_ERROR);

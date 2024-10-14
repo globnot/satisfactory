@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Controller\Twitch;
 
-use App\Infrastructure\Service\Twitch\TwitchApiService;
+use App\Infrastructure\Client\Twitch\TwitchApiClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TwitchAuthTokenController extends AbstractController
 {
     public function __construct(
-        private TwitchApiService $twitchApiService,
+        private TwitchApiClient $twitchApiClient,
     ) {
     }
 
@@ -22,14 +22,15 @@ class TwitchAuthTokenController extends AbstractController
         $redirectUri = $this->generateUrl('twitch_auth', [], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
         $scopes = 'channel:read:subscriptions';
 
-        $url = $this->twitchApiService->getAuthorizationUrl($redirectUri, $scopes);
+        $url = $this->twitchApiClient->getAuthorizationUrl($redirectUri, $scopes);
 
         return new RedirectResponse($url);
     }
 
     #[Route('/twitch/auth', name: 'twitch_auth')]
-    public function auth(Request $request): Response
-    {
+    public function auth(
+        Request $request,
+    ): Response {
         $code = $request->query->get('code');
 
         if (!$code) {
@@ -39,7 +40,7 @@ class TwitchAuthTokenController extends AbstractController
         $redirectUri = $this->generateUrl('twitch_auth', [], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
 
         try {
-            $tokens = $this->twitchApiService->exchangeCodeForToken($code, $redirectUri);
+            $tokens = $this->twitchApiClient->exchangeCodeForToken($code, $redirectUri);
         } catch (\Exception $e) {
             return new Response('Échec lors de l\'obtention du jeton d\'accès', Response::HTTP_BAD_REQUEST);
         }
