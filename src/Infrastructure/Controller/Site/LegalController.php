@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Infrastructure\Controller;
+namespace App\Infrastructure\Controller\Site;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class StreamOverlayController extends AbstractController
+class LegalController extends AbstractController
 {
-    #[Route('/stream/overlay', name: 'stream_overlay')]
+    #[Route('/legal', name: 'app_legal')]
     public function index(): Response
     {
         return $this->render(
-            'stream/overlay/index.html.twig'
+            'legal/index.html.twig'
         );
     }
 }
