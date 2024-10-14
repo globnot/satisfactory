@@ -20,8 +20,12 @@ class TwitchOverlayController extends AbstractController
         try {
             $subscriberCount = $this->twitchApiService->getSubscriberCount();
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Failed to retrieve subscriber count: '.$e->getMessage());
-            $subscriberCount = $e->getMessage();
+            // Si le jeton n'est pas disponible, rediriger vers l'authentification
+            if ('Jeton d\'accès non disponible ou expiré.' === $e->getMessage()) {
+                return $this->redirectToRoute('twitch_login');
+            }
+
+            $subscriberCount = 'Erreur lors de la récupération';
         }
 
         return $this->render(

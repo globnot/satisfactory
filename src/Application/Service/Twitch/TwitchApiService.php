@@ -8,15 +8,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class TwitchApiService
 {
     public function __construct(
-        private TwitchTokenService $twitchTokenService,
         private HttpClientInterface $httpClientInterface,
         private RequestStack $requestStack,
         private string $clientId = '',
-        private string $clientSecret = '',
         private string $broadcasterId = '',
     ) {
         $this->clientId = $_ENV['TWITCH_CLIENT_ID'] ?? '';
-        $this->clientSecret = $_ENV['TWITCH_CLIENT_SECRET'] ?? '';
         $this->broadcasterId = $_ENV['TWITCH_BROADCASTER_ID'] ?? '';
     }
 

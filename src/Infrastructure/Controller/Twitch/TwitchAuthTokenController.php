@@ -76,9 +76,8 @@ class TwitchAuthTokenController extends AbstractController
         $session->set('twitch_access_token', $accessToken);
         $session->set('twitch_refresh_token', $refreshToken);
         $session->set('twitch_token_expires_at', time() + $expiresIn);
-        dd($session);
 
         // Rediriger vers la page souhaitée après l'authentification
-        return $this->redirectToRoute('twitch_subscribers');
+        return $this->redirectToRoute('twitch_overlay');
     }
 }
