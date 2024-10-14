@@ -2,30 +2,52 @@
 
 namespace App\Infrastructure\Controller\Twitch;
 
-use App\Application\Service\Twitch\TwitchApiService;
+use App\Application\Interface\Twitch\TwitchApiInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TwitchOverlayController extends AbstractController
 {
     public function __construct(
-        private TwitchApiService $twitchApiService,
+        private TwitchApiInterface $twitchApiInterface,
     ) {
     }
 
     #[Route('/twitch/overlay', name: 'twitch_overlay')]
-    public function index(): Response
-    {
-        try {
-            $subscriberCount = $this->twitchApiService->getSubscriberCount();
-        } catch (\Exception $e) {
-            // Si le jeton n'est pas disponible, rediriger vers l'authentification
-            if ('Jeton d\'accès non disponible ou expiré.' === $e->getMessage()) {
+    public function getSubscribers(
+        Request $request,
+    ): Response {
+        $session = $request->getSession();
+        $accessToken = $session->get('twitch_access_token');
+        $refreshToken = $session->get('twitch_refresh_token');
+        $expiresAt = $session->get('twitch_token_expires_at');
+
+        if (!$accessToken || !$expiresAt || $expiresAt < time()) {
+            if ($refreshToken) {
+                try {
+                    $tokens = $this->twitchApiInterface->refreshAccessToken($refreshToken);
+                    // Mettre à jour la session avec les nouveaux jetons
+                    $session->set('twitch_access_token', $tokens['access_token']);
+                    $session->set('twitch_refresh_token', $tokens['refresh_token']);
+                    $session->set('twitch_token_expires_at', time() + $tokens['expires_in']);
+                    $accessToken = $tokens['access_token'];
+                } catch (\Exception $e) {
+                    // Rediriger vers la page de connexion si le rafraîchissement échoue
+                    return $this->redirectToRoute('twitch_login');
+                }
+            } else {
+                // Aucun refresh token disponible, rediriger vers la page de connexion
                 return $this->redirectToRoute('twitch_login');
             }
+        }
 
-            $subscriberCount = 'Erreur lors de la récupération';
+        try {
+            $subscriberCount = $this->twitchApiInterface->getSubscriberCount($accessToken);
+        } catch (\Exception $e) {
+            // Gérer les erreurs, par exemple en affichant un message à l'utilisateur
+            return new Response('Erreur lors de la récupération des abonnés.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $this->render(
