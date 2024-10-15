@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Controller;
+namespace App\Infrastructure\Controller\Site;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +12,7 @@ class ContactController extends AbstractController
     public function index(): Response
     {
         return $this->render(
-            'contact/index.html.twig'
+            'site/contact/index.html.twig'
         );
     }
 }
