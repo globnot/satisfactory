@@ -19,8 +19,8 @@ variables:
     php:
         opcache.preload: config/preload.php
     env:
-        APP_ENV: "prod"
-        APP_DEBUG: "false"
+        APP_ENV: "dev"
+        APP_DEBUG: "true"
 
 build:
     flavor: none
