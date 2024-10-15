@@ -14,7 +14,7 @@ const StreamOverlay: React.FC<StreamOverlayProps> = ({ subscriberCount }) => {
     return (
         <Card className="flex flex-col justify-end bg-transparent shadow-xl w-[350px] h-[350px] shadow-main">
             <div className="flex justify-end mb-4 me-4">
-                <Button className="text-2xl font-black w-fit">
+                <Button className="text-2xl font-black w-fit bg-secondary">
                     {subscriberCount}/{targetSubs} SUBS
                     <Heart size={30} strokeWidth={2} className="ms-4" />
                 </Button>
