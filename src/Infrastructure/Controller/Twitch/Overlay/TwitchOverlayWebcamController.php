@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Controller\Twitch\Overlay;
 
 use App\Application\Interface\Twitch\TwitchApiInterface;
+use App\Infrastructure\Persistence\Service\Twitch\TwitchTokenStorageService;
 use App\Infrastructure\Service\Twitch\TwitchGetSubscriberCountService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,7 @@ class TwitchOverlayWebcamController extends AbstractController
     public function __construct(
         private TwitchApiInterface $twitchApiInterface,
         private TwitchGetSubscriberCountService $twitchGetSubscriberCountService,
+        private TwitchTokenStorageService $twitchTokenStorageService,
     ) {
     }
 
@@ -21,19 +23,17 @@ class TwitchOverlayWebcamController extends AbstractController
     public function getSubscribers(
         Request $request,
     ): Response {
-        $session = $request->getSession();
-        $accessToken = $session->get('twitch_access_token');
-        $refreshToken = $session->get('twitch_refresh_token');
-        $expiresAt = $session->get('twitch_token_expires_at');
+        $tokens = $this->twitchTokenStorageService->getTokens();
+        $accessToken = $tokens['access_token'] ?? null;
+        $refreshToken = $tokens['refresh_token'] ?? null;
+        $expiresAt = $tokens['expires_at'] ?? null;
 
         if (!$accessToken || !$expiresAt || $expiresAt < time()) {
             if ($refreshToken) {
                 try {
                     $tokens = $this->twitchApiInterface->refreshAccessToken($refreshToken);
-                    // Mettre à jour la session avec les nouveaux jetons
-                    $session->set('twitch_access_token', $tokens['access_token']);
-                    $session->set('twitch_refresh_token', $tokens['refresh_token']);
-                    $session->set('twitch_token_expires_at', time() + $tokens['expires_in']);
+                    // Mettre à jour les jetons dans le stockage
+                    $this->twitchTokenStorageService->updateTokens($tokens);
                     $accessToken = $tokens['access_token'];
                 } catch (\Exception $e) {
                     // Rediriger vers la page de connexion si le rafraîchissement échoue
