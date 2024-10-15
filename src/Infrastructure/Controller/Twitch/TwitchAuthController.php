@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class TwitchAuthTokenController extends AbstractController
+class TwitchAuthController extends AbstractController
 {
     public function __construct(
         private TwitchApiClient $twitchApiClient,
