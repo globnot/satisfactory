@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: 'Geist';
+    src: url('/assets/fonts/Geist/variable/Geist[wght].ttf') format('truetype');
+    font-weight: 100 900; /* Plage de poids de 100 à 900 */
+    font-style: normal;
+  }
+  
+
+  
+
+
+  

@@ -11,6 +11,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Geist', 'sans-serif'],
+      },
+
       colors: {
         main: '#ff00ff',
         mainAccent: '#d100d1', // not needed for shadcn components
