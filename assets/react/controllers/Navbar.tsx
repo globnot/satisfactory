@@ -1,14 +1,22 @@
 import * as React from "react";
 import Logo from "@/components/svg/logo/logo";
+import { Menu, User } from "lucide-react";
 import ThemeToggle from "@/components/theme-toggle";
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Menu, Slash } from "lucide-react";
+  Menubar,
+  MenubarCheckboxItem,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarTrigger,
+} from '@/components/ui/menubar'
 import {
   Sheet,
   SheetContent,
@@ -24,26 +32,92 @@ export default function Navbar({ path }) {
 
       <div className="items-center hidden mr-4 md:flex">
 
-        <a className="flex items-center mr-6 space-x-2" href="/">
+        {/* Logo */}
+        <a className="flex items-center mr-20 space-x-2" href={path.home}>
           <Logo className="w-12 h-12" />
           <span className="hidden font-bold sm:inline-block text-text dark:text-darkText">Globnot</span>
         </a>
 
-        <div className="ml-10">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href={path.homePath}>Home</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator>
-                <Slash />
-              </BreadcrumbSeparator>
-              <BreadcrumbItem>
-                <BreadcrumbLink href={path.homePath}>Other</BreadcrumbLink>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
+        {/* Menu */}
+        <Menubar>
+          <MenubarMenu>
+            <MenubarTrigger>Satisfactory</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem>
+                <a href={path.twitchOverlayWebcam}>Overlay
+                  Blueprints / Plans
+                </a>
+              </MenubarItem>
+              <MenubarSeparator />
+              <MenubarSub>
+                <MenubarSubTrigger>Share</MenubarSubTrigger>
+                <MenubarSubContent>
+                  <MenubarItem>Email link</MenubarItem>
+                  <MenubarItem>Messages</MenubarItem>
+                  <MenubarItem>Notes</MenubarItem>
+                </MenubarSubContent>
+              </MenubarSub>
+              <MenubarSeparator />
+              <MenubarItem>
+                Print... <MenubarShortcut>⌘P</MenubarShortcut>
+              </MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+          <MenubarMenu>
+            <MenubarTrigger>Edit</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem>
+                Undo <MenubarShortcut>⌘Z</MenubarShortcut>
+              </MenubarItem>
+              <MenubarItem>
+                Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+              </MenubarItem>
+              <MenubarSeparator />
+              <MenubarSub>
+                <MenubarSubTrigger>Find</MenubarSubTrigger>
+                <MenubarSubContent>
+                  <MenubarItem>Search the web</MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem>Find...</MenubarItem>
+                  <MenubarItem>Find Next</MenubarItem>
+                  <MenubarItem>Find Previous</MenubarItem>
+                </MenubarSubContent>
+              </MenubarSub>
+              <MenubarSeparator />
+              <MenubarItem>Cut</MenubarItem>
+              <MenubarItem>Copy</MenubarItem>
+              <MenubarItem>Paste</MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+          <MenubarMenu>
+            <MenubarTrigger>Support</MenubarTrigger>
+            <MenubarContent>
+              <MenubarCheckboxItem>Always Show Bookmarks Bar</MenubarCheckboxItem>
+              <MenubarCheckboxItem checked>Always Show Full URLs</MenubarCheckboxItem>
+              <MenubarSeparator />
+              <MenubarItem inset>
+                Reload <MenubarShortcut>⌘R</MenubarShortcut>
+              </MenubarItem>
+              <MenubarItem disabled inset>
+                Force Reload <MenubarShortcut>⇧⌘R</MenubarShortcut>
+              </MenubarItem>
+              <MenubarSeparator />
+              <MenubarItem inset>Toggle Fullscreen</MenubarItem>
+              <MenubarSeparator />
+              <MenubarItem inset>Hide Sidebar</MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+          <MenubarMenu>
+            <MenubarTrigger>Account</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem inset>
+                <a href={path.twitchOverlayWebcam}>Overlay</a>
+              </MenubarItem>
+              <MenubarSeparator />
+              <MenubarItem inset>Add Profile...</MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
 
       </div>
 
@@ -84,11 +158,13 @@ export default function Navbar({ path }) {
         </SheetContent>
       </Sheet>
 
+      {/* Theme Toggle */}
       <div className="flex items-center justify-end flex-1 space-x-2">
         <nav className="flex items-center">
           <ThemeToggle />
         </nav>
       </div>
+
     </div>
   );
 }
