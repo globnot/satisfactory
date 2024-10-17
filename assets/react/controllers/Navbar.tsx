@@ -44,7 +44,7 @@ export default function Navbar({ path }) {
             <MenubarTrigger>Satisfactory</MenubarTrigger>
             <MenubarContent>
               <MenubarItem>
-                <a href={path.twitchOverlayWebcam}>Overlay
+                <a href={path.satisfactory}>Overlay
                   Blueprints / Plans
                 </a>
               </MenubarItem>

@@ -1,0 +1,20 @@
+{% extends 'base/base.html.twig' %}
+
+{% block title %}
+	{{ parent() }}
+	- Satisfactory
+{% endblock %}
+
+{% block body %}
+
+	{% set images = [
+        asset('build/images/test1.png'),
+        asset('build/images/test2.png'),
+    ] %}
+
+	{# Passer les images en tant que props au composant React #}
+	<div {{ react_component('SatisfactoryPlan', { images: images } ) }}>
+		<twig:ux:icon name="line-md:loading-loop" class="w-10"/>
+	</div>
+
+{% endblock %}
