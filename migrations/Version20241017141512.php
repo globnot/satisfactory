@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20241015195619 extends AbstractMigration
+final class Version20241017141512 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,7 +20,14 @@ final class Version20241015195619 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE SEQUENCE satisfactory_bp_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE satisfactory_image_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE twitch_token_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE TABLE satisfactory_bp (id INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, title VARCHAR(255) DEFAULT NULL, description VARCHAR(255) DEFAULT NULL, author VARCHAR(50) DEFAULT NULL, download_url_sbp VARCHAR(255) DEFAULT NULL, download_url_sbpcfg VARCHAR(255) DEFAULT NULL, download_count INT DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('COMMENT ON COLUMN satisfactory_bp.created_at IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql('COMMENT ON COLUMN satisfactory_bp.updated_at IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql('CREATE TABLE satisfactory_image (id INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('COMMENT ON COLUMN satisfactory_image.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('CREATE TABLE twitch_token (id INT NOT NULL, access_token VARCHAR(255) NOT NULL, refresh_token VARCHAR(255) DEFAULT NULL, expires_at INT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE messenger_messages (id BIGSERIAL NOT NULL, body TEXT NOT NULL, headers TEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, available_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, delivered_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_75EA56E0FB7336F0 ON messenger_messages (queue_name)');
@@ -43,7 +50,11 @@ final class Version20241015195619 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SCHEMA public');
+        $this->addSql('DROP SEQUENCE satisfactory_bp_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE satisfactory_image_id_seq CASCADE');
         $this->addSql('DROP SEQUENCE twitch_token_id_seq CASCADE');
+        $this->addSql('DROP TABLE satisfactory_bp');
+        $this->addSql('DROP TABLE satisfactory_image');
         $this->addSql('DROP TABLE twitch_token');
         $this->addSql('DROP TABLE messenger_messages');
     }
