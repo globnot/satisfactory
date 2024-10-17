@@ -4,8 +4,11 @@ namespace App\Domain\Entity\Site;
 
 use App\Infrastructure\Persistence\Repository\Site\SatisfactoryImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: SatisfactoryImageRepository::class)]
+#[Vich\Uploadable]
 class SatisfactoryImage
 {
     #[ORM\Id]
@@ -13,11 +16,14 @@ class SatisfactoryImage
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Vich\UploadableField(mapping: 'satisfactory_bp', fileNameProperty: 'imageName')]
+    private ?File $imageFile = null;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $imageName = null;
 
     #[ORM\ManyToOne(inversedBy: 'image')]
     private ?SatisfactoryBp $satisfactoryBp = null;
@@ -25,6 +31,11 @@ class SatisfactoryImage
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
@@ -39,14 +50,14 @@ class SatisfactoryImage
         return $this;
     }
 
-    public function getName(): ?string
+    public function getImageName(): ?string
     {
-        return $this->name;
+        return $this->imageName;
     }
 
-    public function setName(string $name): static
+    public function setImageName(string $imageName): static
     {
-        $this->name = $name;
+        $this->imageName = $imageName;
 
         return $this;
     }

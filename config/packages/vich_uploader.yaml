@@ -1,0 +1,14 @@
+vich_uploader:
+    db_driver: orm
+
+    metadata:
+        type: attribute
+
+    mappings:
+        satisfactory_bp:
+            uri_prefix: /images/satisfactory_bp
+            upload_destination: '%kernel.project_dir%/public/images/satisfactory_bp'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true
