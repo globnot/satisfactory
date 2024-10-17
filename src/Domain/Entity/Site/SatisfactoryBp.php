@@ -2,8 +2,8 @@
 
 namespace App\Domain\Entity\Site;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Infrastructure\Persistence\Repository\Site\SatisfactoryBpRepository;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SatisfactoryBpRepository::class)]
 class SatisfactoryBp

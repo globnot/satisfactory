@@ -2,9 +2,9 @@
 
 namespace App\Infrastructure\Persistence\Repository\Site;
 
-use Doctrine\Persistence\ManagerRegistry;
 use App\Domain\Entity\Site\SatisfactoryBp;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<SatisfactoryBp>
