@@ -19,6 +19,9 @@ class SatisfactoryImage
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\ManyToOne(inversedBy: 'image')]
+    private ?SatisfactoryBp $satisfactoryBp = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,18 @@ class SatisfactoryImage
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getSatisfactoryBp(): ?SatisfactoryBp
+    {
+        return $this->satisfactoryBp;
+    }
+
+    public function setSatisfactoryBp(?SatisfactoryBp $satisfactoryBp): static
+    {
+        $this->satisfactoryBp = $satisfactoryBp;
 
         return $this;
     }

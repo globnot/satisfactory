@@ -22,6 +22,9 @@ class SatisfactoryComment
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $author = null;
 
+    #[ORM\ManyToOne(inversedBy: 'comment')]
+    private ?SatisfactoryBp $satisfactoryBp = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +62,18 @@ class SatisfactoryComment
     public function setAuthor(?string $author): static
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getSatisfactoryBp(): ?SatisfactoryBp
+    {
+        return $this->satisfactoryBp;
+    }
+
+    public function setSatisfactoryBp(?SatisfactoryBp $satisfactoryBp): static
+    {
+        $this->satisfactoryBp = $satisfactoryBp;
 
         return $this;
     }

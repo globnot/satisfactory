@@ -3,6 +3,8 @@
 namespace App\Domain\Entity\Site;
 
 use App\Infrastructure\Persistence\Repository\Site\SatisfactoryBpRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SatisfactoryBpRepository::class)]
@@ -36,6 +38,24 @@ class SatisfactoryBp
 
     #[ORM\Column(nullable: true)]
     private ?int $downloadCount = null;
+
+    /**
+     * @var Collection<int, SatisfactoryImage>
+     */
+    #[ORM\OneToMany(targetEntity: SatisfactoryImage::class, mappedBy: 'satisfactoryBp')]
+    private Collection $image;
+
+    /**
+     * @var Collection<int, SatisfactoryComment>
+     */
+    #[ORM\OneToMany(targetEntity: SatisfactoryComment::class, mappedBy: 'satisfactoryBp')]
+    private Collection $comment;
+
+    public function __construct()
+    {
+        $this->image = new ArrayCollection();
+        $this->comment = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -134,6 +154,66 @@ class SatisfactoryBp
     public function setDownloadCount(?int $downloadCount): static
     {
         $this->downloadCount = $downloadCount;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SatisfactoryImage>
+     */
+    public function getImage(): Collection
+    {
+        return $this->image;
+    }
+
+    public function addImage(SatisfactoryImage $image): static
+    {
+        if (!$this->image->contains($image)) {
+            $this->image->add($image);
+            $image->setSatisfactoryBp($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(SatisfactoryImage $image): static
+    {
+        if ($this->image->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getSatisfactoryBp() === $this) {
+                $image->setSatisfactoryBp(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SatisfactoryComment>
+     */
+    public function getComment(): Collection
+    {
+        return $this->comment;
+    }
+
+    public function addComment(SatisfactoryComment $comment): static
+    {
+        if (!$this->comment->contains($comment)) {
+            $this->comment->add($comment);
+            $comment->setSatisfactoryBp($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(SatisfactoryComment $comment): static
+    {
+        if ($this->comment->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getSatisfactoryBp() === $this) {
+                $comment->setSatisfactoryBp(null);
+            }
+        }
 
         return $this;
     }
