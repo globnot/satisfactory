@@ -22,3 +22,6 @@ yarn-error.log
 
 #php-cs-fixer
 /.php-cs-fixer.cache
+
+#public
+/public/uploads/

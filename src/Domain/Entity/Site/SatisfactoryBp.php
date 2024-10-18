@@ -42,19 +42,21 @@ class SatisfactoryBp
     /**
      * @var Collection<int, SatisfactoryImage>
      */
-    #[ORM\OneToMany(targetEntity: SatisfactoryImage::class, mappedBy: 'satisfactoryBp')]
+    #[ORM\OneToMany(targetEntity: SatisfactoryImage::class, mappedBy: 'satisfactoryBp', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $image;
 
     /**
      * @var Collection<int, SatisfactoryComment>
      */
-    #[ORM\OneToMany(targetEntity: SatisfactoryComment::class, mappedBy: 'satisfactoryBp')]
+    #[ORM\OneToMany(targetEntity: SatisfactoryComment::class, mappedBy: 'satisfactoryBp', cascade: ['persist', 'remove'])]
     private Collection $comment;
 
     public function __construct()
     {
         $this->image = new ArrayCollection();
         $this->comment = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
