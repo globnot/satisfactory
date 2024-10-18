@@ -2,17 +2,17 @@
 
 namespace App\Infrastructure\Controller\Site;
 
+use App\Infrastructure\Persistence\Repository\Site\SatisfactoryBpRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Infrastructure\Persistence\Repository\Site\SatisfactoryBpRepository;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class SatisfactoryController extends AbstractController
 {
     public function __construct(
         private SatisfactoryBpRepository $satisfactoryBpRepository,
-        private SerializerInterface $serializer
+        private SerializerInterface $serializer,
     ) {
     }
 
@@ -31,7 +31,7 @@ class SatisfactoryController extends AbstractController
                 'comments' => array_map(function ($comment) {
                     return [
                         'author' => $comment->getAuthor(),
-                        'content' => $comment->getContent(),
+                        'content' => $comment->getComment(),
                         'createdAt' => $comment->getCreatedAt()->format('Y-m-d H:i:s'),
                     ];
                 }, $blueprint->getComment()->toArray()),
@@ -39,7 +39,7 @@ class SatisfactoryController extends AbstractController
                 'downloadUrlSbpcfg' => $blueprint->getDownloadUrlSbpcfg(),
                 'downloadCount' => $blueprint->getDownloadCount(),
                 'images' => array_map(function ($image) {
-                    return '/uploads/satisfactory_bp/' . $image->getImageName();
+                    return '/uploads/satisfactory_bp/'.$image->getImageName();
                 }, $blueprint->getImage()->toArray()),
             ];
         }, $blueprints);
@@ -47,7 +47,7 @@ class SatisfactoryController extends AbstractController
         return $this->render(
             'site/satisfactory/blueprints.html.twig',
             [
-                'blocks' => $blocks
+                'blocks' => $blocks,
             ]
         );
     }
