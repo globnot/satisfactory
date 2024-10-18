@@ -83,11 +83,11 @@ export default function Navbar({ path }) {
       <Sheet>
         <SheetTrigger asChild>
           <button
-            className="inline-flex items-center justify-center px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md whitespace-nowrap focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground h-9 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+            className="inline-flex items-center justify-center px-4 py-2 mr-2 text-base font-medium transition-colors rounded-md whitespace-nowrap focus-visible:outline-none focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground h-9 hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
             type="button"
             aria-haspopup="dialog"
           >
-            <Menu />
+            <Menu size={32} />
             <span className="sr-only">Toggle Menu</span>
           </button>
         </SheetTrigger>
@@ -101,22 +101,19 @@ export default function Navbar({ path }) {
               </a>
             </SheetTitle>
           </SheetHeader>
-          <nav className="flex flex-col items-start space-y-4 font-semibold">
+          <nav className="flex flex-col items-start mt-4 space-y-4 font-semibold">
             <a href={path.homePath}>
               Home
             </a>
-            <a href={path.homePath}>
-              Contact
-            </a>
-            <a href={path.homePath}>
-              Legal
+            <a href={path.satisfactory_blueprints}>
+              Satisfactory Blueprints
             </a>
           </nav>
         </SheetContent>
       </Sheet>
 
       {/* Theme Toggle */}
-      <div className="flex items-center justify-end flex-1 space-x-2">
+      <div className="flex items-center justify-end flex-1 p-4 space-x-2">
         <nav className="flex items-center">
           <ThemeToggle />
         </nav>
