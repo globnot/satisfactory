@@ -4,12 +4,9 @@ import { Menu, User } from "lucide-react";
 import ThemeToggle from "@/components/theme-toggle";
 import {
   Menubar,
-  MenubarCheckboxItem,
   MenubarContent,
   MenubarItem,
   MenubarMenu,
-  MenubarRadioGroup,
-  MenubarRadioItem,
   MenubarSeparator,
   MenubarShortcut,
   MenubarSub,
@@ -23,7 +20,6 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetDescription,
 } from "@/components/ui/sheet";
 
 export default function Navbar({ path }) {
@@ -43,9 +39,8 @@ export default function Navbar({ path }) {
           <MenubarMenu>
             <MenubarTrigger>Satisfactory</MenubarTrigger>
             <MenubarContent>
-              <MenubarItem>
-                <a href={path.satisfactory}>Overlay
-                  Blueprints / Plans
+              <MenubarItem inset>
+                <a href={path.satisfactory}>Blueprints / Plans
                 </a>
               </MenubarItem>
               <MenubarSeparator />
@@ -64,57 +59,19 @@ export default function Navbar({ path }) {
             </MenubarContent>
           </MenubarMenu>
           <MenubarMenu>
-            <MenubarTrigger>Edit</MenubarTrigger>
-            <MenubarContent>
-              <MenubarItem>
-                Undo <MenubarShortcut>⌘Z</MenubarShortcut>
-              </MenubarItem>
-              <MenubarItem>
-                Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
-              </MenubarItem>
-              <MenubarSeparator />
-              <MenubarSub>
-                <MenubarSubTrigger>Find</MenubarSubTrigger>
-                <MenubarSubContent>
-                  <MenubarItem>Search the web</MenubarItem>
-                  <MenubarSeparator />
-                  <MenubarItem>Find...</MenubarItem>
-                  <MenubarItem>Find Next</MenubarItem>
-                  <MenubarItem>Find Previous</MenubarItem>
-                </MenubarSubContent>
-              </MenubarSub>
-              <MenubarSeparator />
-              <MenubarItem>Cut</MenubarItem>
-              <MenubarItem>Copy</MenubarItem>
-              <MenubarItem>Paste</MenubarItem>
-            </MenubarContent>
-          </MenubarMenu>
-          <MenubarMenu>
-            <MenubarTrigger>Support</MenubarTrigger>
-            <MenubarContent>
-              <MenubarCheckboxItem>Always Show Bookmarks Bar</MenubarCheckboxItem>
-              <MenubarCheckboxItem checked>Always Show Full URLs</MenubarCheckboxItem>
-              <MenubarSeparator />
-              <MenubarItem inset>
-                Reload <MenubarShortcut>⌘R</MenubarShortcut>
-              </MenubarItem>
-              <MenubarItem disabled inset>
-                Force Reload <MenubarShortcut>⇧⌘R</MenubarShortcut>
-              </MenubarItem>
-              <MenubarSeparator />
-              <MenubarItem inset>Toggle Fullscreen</MenubarItem>
-              <MenubarSeparator />
-              <MenubarItem inset>Hide Sidebar</MenubarItem>
-            </MenubarContent>
-          </MenubarMenu>
-          <MenubarMenu>
             <MenubarTrigger>Account</MenubarTrigger>
             <MenubarContent>
               <MenubarItem inset>
-                <a href={path.twitchOverlayWebcam}>Overlay</a>
+                <a href={path.twitchOverlayWebcam}>
+                  Overlay
+                </a>
               </MenubarItem>
               <MenubarSeparator />
-              <MenubarItem inset>Add Profile...</MenubarItem>
+              <MenubarItem inset>
+                <a href={path.admin}>
+                  Admin
+                </a>
+              </MenubarItem>
             </MenubarContent>
           </MenubarMenu>
         </Menubar>
