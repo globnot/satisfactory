@@ -40,7 +40,7 @@ export default function Navbar({ path }) {
             <MenubarTrigger>Satisfactory</MenubarTrigger>
             <MenubarContent>
               <MenubarItem inset>
-                <a href={path.satisfactory}>Blueprints / Plans
+                <a href={path.satisfactory_blueprints}>Blueprints / Plans
                 </a>
               </MenubarItem>
               <MenubarSeparator />

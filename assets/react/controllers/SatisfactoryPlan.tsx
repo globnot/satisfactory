@@ -9,21 +9,11 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select'
 
 interface Block {
     title: string;
     description: string;
     author: string;
-    rating: number;
     createdAt: string;
     updatedAt: string;
     comments: string[];
@@ -48,7 +38,7 @@ const SatisfactoryPlan: React.FC<SatisfactoryPlanProps> = ({ blocks }) => {
                             <CardDescription>{block.description}</CardDescription>
                             <div className="flex items-center justify-between">
                                 <span>by {block.author}</span>
-                                <span>{block.rating}</span>
+
                             </div>
                             <div className="flex items-center justify-between">
                                 <span>Created at {block.createdAt}</span>
