@@ -32,7 +32,7 @@ class SatisfactoryController extends AbstractController
                 'downloadUrlSbpcfg' => $blueprint->getDownloadUrlSbpcfg(),
                 'downloadCount' => $blueprint->getDownloadCount(),
                 'images' => array_map(function ($image) {
-                    return '/uploads/satisfactory_bp/' . $image->getImageName();
+                    return '/uploads/satisfactory_bp/'.$image->getImageName();
                 }, $blueprint->getImage()->toArray()),
             ];
         }, $blueprints);

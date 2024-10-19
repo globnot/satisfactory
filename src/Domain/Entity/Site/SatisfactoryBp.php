@@ -45,16 +45,9 @@ class SatisfactoryBp
     #[ORM\OneToMany(targetEntity: SatisfactoryImage::class, mappedBy: 'satisfactoryBp', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $image;
 
-    /**
-     * @var Collection<int, SatisfactoryComment>
-     */
-    #[ORM\OneToMany(targetEntity: SatisfactoryComment::class, mappedBy: 'satisfactoryBp', cascade: ['persist', 'remove'])]
-    private Collection $comment;
-
     public function __construct()
     {
         $this->image = new ArrayCollection();
-        $this->comment = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
     }
@@ -184,36 +177,6 @@ class SatisfactoryBp
             // set the owning side to null (unless already changed)
             if ($image->getSatisfactoryBp() === $this) {
                 $image->setSatisfactoryBp(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, SatisfactoryComment>
-     */
-    public function getComment(): Collection
-    {
-        return $this->comment;
-    }
-
-    public function addComment(SatisfactoryComment $comment): static
-    {
-        if (!$this->comment->contains($comment)) {
-            $this->comment->add($comment);
-            $comment->setSatisfactoryBp($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(SatisfactoryComment $comment): static
-    {
-        if ($this->comment->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getSatisfactoryBp() === $this) {
-                $comment->setSatisfactoryBp(null);
             }
         }
 
