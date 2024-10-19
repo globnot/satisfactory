@@ -16,10 +16,10 @@ module.exports = {
       },
 
       colors: {
-        main: '#ff00ff',
-        mainAccent: '#d100d1', // not needed for shadcn components
-        secondary: '#00ffff', // not needed for shadcn components
-        secondaryAccent: '#00b7b7', // not needed for shadcn components
+        main: '#8346FE',
+        mainAccent: '#572FA7', // not needed for shadcn components
+        secondary: '#ff3c89', // not needed for shadcn components
+        secondaryAccent: '#C52F6B', // not needed for shadcn components
         overlay: 'rgba(0,0,0,0.8)', // background color overlay for alert dialogs, modals, etc.
   
         // light mode
@@ -33,6 +33,7 @@ module.exports = {
         darkText: '#eeefe9',
         darkBorder: '#000',
         secondaryBlack: '#212121', // opposite of plain white, not used pitch black because borders and box-shadows are that color 
+        
       },
       borderRadius: {
         base: '5px'

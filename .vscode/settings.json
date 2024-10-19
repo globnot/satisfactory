@@ -1,5 +1,5 @@
 {
-  "twiggy.framework": "ignore",
-  "makefile.configureOnOpen": false,
-  "scm.compactFolders": false
-}
+    "twiggy.framework": "symfony",
+    "scm.compactFolders": false
+  }
+  

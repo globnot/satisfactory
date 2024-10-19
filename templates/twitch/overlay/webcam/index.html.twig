@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block body %}
-	<div class="w-[1920px] h-[1080px] mx-auto" {{ react_component('StreamOverlay', {'subscriberCount': subscriberCount} ) }}>
+
+	<div class="w-[1920px] h-[1080px] mx-auto" {{ react_component('StreamOverlay') }}>
 		<twig:ux:icon name="line-md:loading-loop" class="w-10"/>
 	</div>
+
 {% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Controller\Twitch;
 
 use App\Infrastructure\Client\Twitch\TwitchApiClient;
+use App\Infrastructure\Persistence\Service\Twitch\TwitchTokenStorageService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,7 @@ class TwitchAuthController extends AbstractController
 {
     public function __construct(
         private TwitchApiClient $twitchApiClient,
+        private TwitchTokenStorageService $tokenStorageService,
     ) {
     }
 
@@ -41,15 +43,11 @@ class TwitchAuthController extends AbstractController
 
         try {
             $tokens = $this->twitchApiClient->exchangeCodeForToken($code, $redirectUri);
+            $this->tokenStorageService->updateTokens($tokens);
         } catch (\Exception $e) {
             return new Response('Échec lors de l\'obtention du jeton d\'accès', Response::HTTP_BAD_REQUEST);
         }
 
-        $session = $request->getSession();
-        $session->set('twitch_access_token', $tokens['access_token']);
-        $session->set('twitch_refresh_token', $tokens['refresh_token']);
-        $session->set('twitch_token_expires_at', time() + $tokens['expires_in']);
-
-        return $this->redirectToRoute('twitch_overlay');
+        return $this->redirectToRoute('twitch_overlay_webcam');
     }
 }

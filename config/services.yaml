@@ -38,3 +38,6 @@ services:
 
     App\Application\Interface\Twitch\TwitchApiInterface:
         alias: App\Infrastructure\Client\Twitch\TwitchApiClient
+
+    App\Application\Interface\Twitch\TwitchSubscriberInterface:
+        alias: App\Infrastructure\Service\Twitch\TwitchSubscriberService
