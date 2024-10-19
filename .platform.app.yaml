@@ -18,9 +18,19 @@ runtime:
 variables:
     php:
         opcache.preload: config/preload.php
+# Variables d'environnement par défaut (pour la branche dev par exemple)
     env:
         APP_ENV: "dev"
         APP_DEBUG: "true"
+
+# Configuration pour la branche production (main)
+# Cette section est évaluée seulement si l'environnement est "production"
+environments:
+    main:
+        variables:
+            env:
+                APP_ENV: "prod"
+                APP_DEBUG: "false"
 
 build:
     flavor: none
