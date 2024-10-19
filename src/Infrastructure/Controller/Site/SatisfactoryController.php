@@ -28,18 +28,11 @@ class SatisfactoryController extends AbstractController
                 'author' => $blueprint->getAuthor(),
                 'createdAt' => $blueprint->getCreatedAt()->format('Y-m-d H:i:s'),
                 'updatedAt' => $blueprint->getUpdatedAt()->format('Y-m-d H:i:s'),
-                'comments' => array_map(function ($comment) {
-                    return [
-                        'author' => $comment->getAuthor(),
-                        'content' => $comment->getComment(),
-                        'createdAt' => $comment->getCreatedAt()->format('Y-m-d H:i:s'),
-                    ];
-                }, $blueprint->getComment()->toArray()),
                 'downloadUrlSbp' => $blueprint->getDownloadUrlSbp(),
                 'downloadUrlSbpcfg' => $blueprint->getDownloadUrlSbpcfg(),
                 'downloadCount' => $blueprint->getDownloadCount(),
                 'images' => array_map(function ($image) {
-                    return '/uploads/satisfactory_bp/'.$image->getImageName();
+                    return '/uploads/satisfactory_bp/' . $image->getImageName();
                 }, $blueprint->getImage()->toArray()),
             ];
         }, $blueprints);

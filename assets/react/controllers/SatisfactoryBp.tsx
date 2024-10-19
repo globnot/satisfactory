@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Carousel } from "@/components/ui/carousel"
+import { Comment } from "@/components/ui/comment-section"
 import { Button } from '@/components/ui/button'
 import {
     Card,
@@ -17,18 +18,17 @@ interface Block {
     author: string;
     createdAt: string;
     updatedAt: string;
-    comments: string[];
     downloadUrlSbp: string;
     downloadUrlSbpcfg: string;
     downloadCount: number;
     images: string[];
 }
 
-interface SatisfactoryPlanProps {
+interface SatisfactoryBpProps {
     blocks: Block[];
 }
 
-const SatisfactoryPlan: React.FC<SatisfactoryPlanProps> = ({ blocks }) => {
+const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
     return (
         <div className="flex flex-wrap justify-center gap-12">
             {blocks.map((block, index) => (
@@ -94,4 +94,4 @@ const SatisfactoryPlan: React.FC<SatisfactoryPlanProps> = ({ blocks }) => {
     )
 }
 
-export default SatisfactoryPlan
+export default SatisfactoryBp
