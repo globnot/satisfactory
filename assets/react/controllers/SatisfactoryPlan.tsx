@@ -9,6 +9,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
+import { CalendarClock, Download, Hammer, RefreshCcw, User } from "lucide-react";
 
 interface Block {
     title: string;
@@ -34,18 +35,37 @@ const SatisfactoryPlan: React.FC<SatisfactoryPlanProps> = ({ blocks }) => {
                 <div key={index} className="w-[350px]">
                     <Card className="flex flex-col h-full">
                         <CardHeader>
-                            <CardTitle>{block.title}</CardTitle>
-                            <CardDescription>{block.description}</CardDescription>
-                            <div className="flex items-center justify-between">
-                                <span>by {block.author}</span>
+                            {/* Title */}
+                            <CardTitle className="uppercase">
+                                <div className="flex items-center justify-start">
+                                    <Hammer size={28} className="mr-2 text-secondary" />{block.title}
+                                </div>
+                            </CardTitle>
+                            {/* Description */}
+                            <CardDescription>
+                                {block.description}
+                            </CardDescription>
+                            {/* Dates */}
+                            <div className="pt-2">
+                                <div className="flex items-start justify-start">
+                                    <CalendarClock size={18} className="mr-2 text-secondary" />
+                                    <span className="text-sm">{block.createdAt}</span>
+                                </div>
+                                <div className="flex items-start justify-start">
+                                    <RefreshCcw size={18} className="mr-2 text-secondary" />
+                                    <span className="text-sm">{block.updatedAt}</span>
+                                </div>
                             </div>
-                            <div className="flex items-center justify-between">
-                                <span>Created at {block.createdAt}</span>
-                                <span>Updated at {block.updatedAt}</span>
+                            {/* Author */}
+                            <div className="flex items-center justify-start">
+                                <User className="mr-2 text-secondary" />
+                                <span className="font-bold">{block.author}</span>
                             </div>
-                            <div className="flex items-center justify-between">
-                                <span>{block.comments.length} comments</span>
-                                <span>{block.downloadCount} downloads</span>
+                            {/* Downloads */}
+                            <div className="flex items-center justify-end">
+                                <span className="text-xs uppercase">Downloads</span>
+                                <Download className="mr-2 ms-2 text-secondary" />
+                                <span className="font-bold">{block.downloadCount}12</span>
                             </div>
                         </CardHeader>
                         <CardContent className="flex-grow">
