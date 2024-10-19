@@ -39,6 +39,12 @@ class SatisfactoryBp
     #[ORM\Column(nullable: true)]
     private ?int $downloadCount = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $likeCount = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $thankCount = null;
+
     /**
      * @var Collection<int, SatisfactoryImage>
      */
@@ -149,6 +155,30 @@ class SatisfactoryBp
     public function setDownloadCount(?int $downloadCount): static
     {
         $this->downloadCount = $downloadCount;
+
+        return $this;
+    }
+
+    public function getLikeCount(): ?int
+    {
+        return $this->likeCount;
+    }
+
+    public function setLikeCount(?int $likeCount): static
+    {
+        $this->likeCount = $likeCount;
+
+        return $this;
+    }
+
+    public function getThankCount(): ?int
+    {
+        return $this->thankCount;
+    }
+
+    public function setThankCount(?int $thankCount): static
+    {
+        $this->thankCount = $thankCount;
 
         return $this;
     }
