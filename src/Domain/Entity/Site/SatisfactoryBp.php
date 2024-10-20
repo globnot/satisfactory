@@ -57,6 +57,12 @@ class SatisfactoryBp
     #[ORM\OneToMany(targetEntity: SatisfactorySbp::class, mappedBy: 'satisfactoryBp', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $sbp;
 
+    /**
+     * @var Collection<int, SatisfactorySbpcfg>
+     */
+    #[ORM\OneToMany(targetEntity: SatisfactorySbpcfg::class, mappedBy: 'satisfactoryBp', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $sbpcfg;
+
     public function __construct()
     {
         $this->image = new ArrayCollection();
@@ -244,6 +250,36 @@ class SatisfactoryBp
             // set the owning side to null (unless already changed)
             if ($sbp->getSatisfactoryBp() === $this) {
                 $sbp->setSatisfactoryBp(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SatisfactorySbpcfg>
+     */
+    public function getSbpcfg(): Collection
+    {
+        return $this->sbpcfg;
+    }
+
+    public function addSbpcfg(SatisfactorySbpcfg $sbpcfg): static
+    {
+        if (!$this->sbpcfg->contains($sbpcfg)) {
+            $this->sbpcfg->add($sbpcfg);
+            $sbpcfg->setSatisfactoryBp($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSbpcfg(SatisfactorySbpcfg $sbpcfg): static
+    {
+        if ($this->sbpcfg->removeElement($sbpcfg)) {
+            // set the owning side to null (unless already changed)
+            if ($sbpcfg->getSatisfactoryBp() === $this) {
+                $sbpcfg->setSatisfactoryBp(null);
             }
         }
 

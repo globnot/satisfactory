@@ -2,22 +2,22 @@
 
 namespace App\Domain\Entity\Site;
 
-use App\Infrastructure\Persistence\Repository\Site\SatisfactorySbpRepository;
+use App\Infrastructure\Persistence\Repository\Site\SatisfactorySbpcfgRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[ORM\Entity(repositoryClass: SatisfactorySbpRepository::class)]
+#[ORM\Entity(repositoryClass: SatisfactorySbpcfgRepository::class)]
 #[Vich\Uploadable]
-class SatisfactorySbp
+class SatisfactorySbpcfg
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Vich\UploadableField(mapping: 'satisfactory_sbp', fileNameProperty: 'sbpName')]
-    private ?File $sbpFile = null;
+    #[Vich\UploadableField(mapping: 'satisfactory_sbpcfg', fileNameProperty: 'sbpcfgName')]
+    private ?File $sbpcfgFile = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -26,9 +26,9 @@ class SatisfactorySbp
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $sbpName = null;
+    private ?string $sbpcfgName = null;
 
-    #[ORM\ManyToOne(inversedBy: 'sbp')]
+    #[ORM\ManyToOne(inversedBy: 'sbpcfg')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?SatisfactoryBp $satisfactoryBp = null;
 
@@ -43,16 +43,16 @@ class SatisfactorySbp
         return $this->id;
     }
 
-    public function getSbpFile(): ?File
+    public function getSbpcfgFile(): ?File
     {
-        return $this->sbpFile;
+        return $this->sbpcfgFile;
     }
 
-    public function setSbpFile(File $sbpFile): static
+    public function setSbpcfgFile(File $sbpcfgFile): static
     {
-        $this->sbpFile = $sbpFile;
+        $this->sbpcfgFile = $sbpcfgFile;
 
-        if (null !== $sbpFile) {
+        if (null !== $sbpcfgFile) {
             $this->updatedAt = new \DateTimeImmutable();
         }
 
@@ -83,14 +83,14 @@ class SatisfactorySbp
         return $this;
     }
 
-    public function getSbpName(): ?string
+    public function getSbpcfgName(): ?string
     {
-        return $this->sbpName;
+        return $this->sbpcfgName;
     }
 
-    public function setSbpName(?string $sbpName): static
+    public function setSbpcfgName(?string $sbpcfgName): static
     {
-        $this->sbpName = $sbpName;
+        $this->sbpcfgName = $sbpcfgName;
 
         return $this;
     }

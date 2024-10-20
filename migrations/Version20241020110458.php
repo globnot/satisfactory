@@ -14,7 +14,7 @@ final class Version20241020110458 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Add satisfactory_sbp table';
     }
 
     public function up(Schema $schema): void
