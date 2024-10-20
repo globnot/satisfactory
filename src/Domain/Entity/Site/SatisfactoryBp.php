@@ -51,9 +51,16 @@ class SatisfactoryBp
     #[ORM\OneToMany(targetEntity: SatisfactoryImage::class, mappedBy: 'satisfactoryBp', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $image;
 
+    /**
+     * @var Collection<int, SatisfactorySbp>
+     */
+    #[ORM\OneToMany(targetEntity: SatisfactorySbp::class, mappedBy: 'satisfactoryBp', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $sbp;
+
     public function __construct()
     {
         $this->image = new ArrayCollection();
+        $this->sbp = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
     }
@@ -207,6 +214,36 @@ class SatisfactoryBp
             // set the owning side to null (unless already changed)
             if ($image->getSatisfactoryBp() === $this) {
                 $image->setSatisfactoryBp(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SatisfactorySbp>
+     */
+    public function getSbp(): Collection
+    {
+        return $this->sbp;
+    }
+
+    public function addSbp(SatisfactorySbp $sbp): static
+    {
+        if (!$this->sbp->contains($sbp)) {
+            $this->sbp->add($sbp);
+            $sbp->setSatisfactoryBp($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSbp(SatisfactorySbp $sbp): static
+    {
+        if ($this->sbp->removeElement($sbp)) {
+            // set the owning side to null (unless already changed)
+            if ($sbp->getSatisfactoryBp() === $this) {
+                $sbp->setSatisfactoryBp(null);
             }
         }
 
