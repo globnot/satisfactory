@@ -67,6 +67,7 @@ class SatisfactoryBp
     {
         $this->image = new ArrayCollection();
         $this->sbp = new ArrayCollection();
+        $this->sbpcfg = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
     }
