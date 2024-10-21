@@ -5,6 +5,7 @@ namespace App\Domain\Entity\Site;
 use App\Infrastructure\Persistence\Repository\Site\SatisfactorySbpRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: SatisfactorySbpRepository::class)]
@@ -17,6 +18,10 @@ class SatisfactorySbp
     private ?int $id = null;
 
     #[Vich\UploadableField(mapping: 'satisfactory_sbp', fileNameProperty: 'sbpName')]
+    #[Assert\File(
+        mimeTypes: ['application/x-sbp'],
+        mimeTypesMessage: 'Veuillez télécharger un fichier SBP valide.'
+    )]
     private ?File $sbpFile = null;
 
     #[ORM\Column]
