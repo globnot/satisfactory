@@ -30,12 +30,6 @@ class SatisfactoryBp
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $author = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $downloadUrlSbp = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $downloadUrlSbpcfg = null;
-
     #[ORM\Column(nullable: true)]
     private ?int $downloadCount = null;
 
@@ -51,9 +45,23 @@ class SatisfactoryBp
     #[ORM\OneToMany(targetEntity: SatisfactoryImage::class, mappedBy: 'satisfactoryBp', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $image;
 
+    /**
+     * @var Collection<int, SatisfactorySbp>
+     */
+    #[ORM\OneToMany(targetEntity: SatisfactorySbp::class, mappedBy: 'satisfactoryBp', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $sbp;
+
+    /**
+     * @var Collection<int, SatisfactorySbpcfg>
+     */
+    #[ORM\OneToMany(targetEntity: SatisfactorySbpcfg::class, mappedBy: 'satisfactoryBp', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $sbpcfg;
+
     public function __construct()
     {
         $this->image = new ArrayCollection();
+        $this->sbp = new ArrayCollection();
+        $this->sbpcfg = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
     }
@@ -123,30 +131,6 @@ class SatisfactoryBp
         return $this;
     }
 
-    public function getDownloadUrlSbp(): ?string
-    {
-        return $this->downloadUrlSbp;
-    }
-
-    public function setDownloadUrlSbp(?string $downloadUrlSbp): static
-    {
-        $this->downloadUrlSbp = $downloadUrlSbp;
-
-        return $this;
-    }
-
-    public function getDownloadUrlSbpcfg(): ?string
-    {
-        return $this->downloadUrlSbpcfg;
-    }
-
-    public function setDownloadUrlSbpcfg(?string $downloadUrlSbpcfg): static
-    {
-        $this->downloadUrlSbpcfg = $downloadUrlSbpcfg;
-
-        return $this;
-    }
-
     public function getDownloadCount(): ?int
     {
         return $this->downloadCount;
@@ -155,6 +139,13 @@ class SatisfactoryBp
     public function setDownloadCount(?int $downloadCount): static
     {
         $this->downloadCount = $downloadCount;
+
+        return $this;
+    }
+
+    public function incrementDownloadCount(): static
+    {
+        ++$this->downloadCount;
 
         return $this;
     }
@@ -183,6 +174,13 @@ class SatisfactoryBp
         return $this;
     }
 
+    public function incrementThankCount(): static
+    {
+        ++$this->thankCount;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, SatisfactoryImage>
      */
@@ -207,6 +205,66 @@ class SatisfactoryBp
             // set the owning side to null (unless already changed)
             if ($image->getSatisfactoryBp() === $this) {
                 $image->setSatisfactoryBp(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SatisfactorySbp>
+     */
+    public function getSbp(): Collection
+    {
+        return $this->sbp;
+    }
+
+    public function addSbp(SatisfactorySbp $sbp): static
+    {
+        if (!$this->sbp->contains($sbp)) {
+            $this->sbp->add($sbp);
+            $sbp->setSatisfactoryBp($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSbp(SatisfactorySbp $sbp): static
+    {
+        if ($this->sbp->removeElement($sbp)) {
+            // set the owning side to null (unless already changed)
+            if ($sbp->getSatisfactoryBp() === $this) {
+                $sbp->setSatisfactoryBp(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SatisfactorySbpcfg>
+     */
+    public function getSbpcfg(): Collection
+    {
+        return $this->sbpcfg;
+    }
+
+    public function addSbpcfg(SatisfactorySbpcfg $sbpcfg): static
+    {
+        if (!$this->sbpcfg->contains($sbpcfg)) {
+            $this->sbpcfg->add($sbpcfg);
+            $sbpcfg->setSatisfactoryBp($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSbpcfg(SatisfactorySbpcfg $sbpcfg): static
+    {
+        if ($this->sbpcfg->removeElement($sbpcfg)) {
+            // set the owning side to null (unless already changed)
+            if ($sbpcfg->getSatisfactoryBp() === $this) {
+                $sbpcfg->setSatisfactoryBp(null);
             }
         }
 

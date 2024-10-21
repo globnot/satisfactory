@@ -41,3 +41,14 @@ services:
 
     App\Application\Interface\Twitch\TwitchSubscriberInterface:
         alias: App\Infrastructure\Service\Twitch\TwitchSubscriberService
+
+# VichUploader Namer
+    App\Infrastructure\Namer\Site\SatisfactorySbpNamer:
+        public: true
+        tags:
+            - { name: vich_uploader.namer, mapping: your_entity_mapping }
+
+    App\Infrastructure\Namer\Site\SatisfactorySbpcfgNamer:
+        public: true
+        tags:
+            - { name: vich_uploader.namer, mapping: your_entity_mapping }

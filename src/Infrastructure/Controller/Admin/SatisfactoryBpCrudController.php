@@ -4,6 +4,8 @@ namespace App\Infrastructure\Controller\Admin;
 
 use App\Domain\Entity\Site\SatisfactoryBp;
 use App\Infrastructure\Form\Admin\SatisfactoryImageType;
+use App\Infrastructure\Form\Admin\SatisfactorySbpcfgType;
+use App\Infrastructure\Form\Admin\SatisfactorySbpType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -27,11 +29,19 @@ class SatisfactoryBpCrudController extends AbstractCrudController
             TextField::new('author'),
             DateTimeField::new('createdAt')->hideOnForm(),
             DateTimeField::new('updatedAt')->hideOnForm(),
-            TextField::new('downloadUrlSbp'),
-            TextField::new('downloadUrlSbpcfg'),
             IntegerField::new('downladCount')->hideOnForm(),
             CollectionField::new('image')
                 ->setEntryType(SatisfactoryImageType::class)
+                ->setFormTypeOption('by_reference', false)
+                ->allowAdd(true)
+                ->allowDelete(true),
+            CollectionField::new('sbp')
+                ->setEntryType(SatisfactorySbpType::class)
+                ->setFormTypeOption('by_reference', false)
+                ->allowAdd(true)
+                ->allowDelete(true),
+            CollectionField::new('sbpcfg')
+                ->setEntryType(SatisfactorySbpcfgType::class)
                 ->setFormTypeOption('by_reference', false)
                 ->allowAdd(true)
                 ->allowDelete(true),

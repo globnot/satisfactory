@@ -37,41 +37,39 @@ export default function Navbar({ path }) {
         {/* Menu */}
         <Menubar>
           <MenubarMenu>
-            <MenubarTrigger>Satisfactory</MenubarTrigger>
+            <MenubarTrigger>Home</MenubarTrigger>
             <MenubarContent>
-              <MenubarItem inset>
-                <a href={path.satisfactory_blueprints}>Blueprints / Plans
-                </a>
-              </MenubarItem>
-              <MenubarSeparator />
-              <MenubarSub>
-                <MenubarSubTrigger>Share</MenubarSubTrigger>
-                <MenubarSubContent>
-                  <MenubarItem>Email link</MenubarItem>
-                  <MenubarItem>Messages</MenubarItem>
-                  <MenubarItem>Notes</MenubarItem>
-                </MenubarSubContent>
-              </MenubarSub>
-              <MenubarSeparator />
-              <MenubarItem>
-                Print... <MenubarShortcut>⌘P</MenubarShortcut>
-              </MenubarItem>
+              <a href={path.satisfactory_blueprints}>
+                <MenubarItem>
+                  Twitch
+                </MenubarItem>
+              </a>
             </MenubarContent>
           </MenubarMenu>
           <MenubarMenu>
-            <MenubarTrigger>Account</MenubarTrigger>
+            <MenubarTrigger>Satisfactory</MenubarTrigger>
             <MenubarContent>
-              <MenubarItem inset>
-                <a href={path.twitchOverlayWebcam}>
+              <a href={path.satisfactory_blueprints}>
+                <MenubarItem>
+                  Blueprints
+                </MenubarItem>
+              </a>
+            </MenubarContent>
+          </MenubarMenu>
+          <MenubarMenu>
+            <MenubarTrigger>Admin</MenubarTrigger>
+            <MenubarContent>
+              <a href={path.twitchOverlayWebcam}>
+                <MenubarItem inset>
                   Overlay
-                </a>
-              </MenubarItem>
+                </MenubarItem>
+              </a>
               <MenubarSeparator />
-              <MenubarItem inset>
-                <a href={path.admin}>
+              <a href={path.admin}>
+                <MenubarItem inset>
                   Admin
-                </a>
-              </MenubarItem>
+                </MenubarItem>
+              </a>
             </MenubarContent>
           </MenubarMenu>
         </Menubar>
