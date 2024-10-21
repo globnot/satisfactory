@@ -174,6 +174,13 @@ class SatisfactoryBp
         return $this;
     }
 
+    public function incrementThankCount(): static
+    {
+        ++$this->thankCount;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, SatisfactoryImage>
      */

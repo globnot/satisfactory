@@ -6,6 +6,7 @@ use App\Infrastructure\Persistence\Repository\Site\SatisfactoryBpRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,6 +35,7 @@ class SatisfactoryController extends AbstractController
                 'createdAt' => $blueprint->getCreatedAt()->format('Y-m-d H:i:s'),
                 'updatedAt' => $blueprint->getUpdatedAt()->format('Y-m-d H:i:s'),
                 'downloadCount' => $blueprint->getDownloadCount(),
+                'thankCount' => $blueprint->getThankCount(),
                 'images' => array_map(function ($image) {
                     return '/uploads/satisfactory_bp/'.$image->getImageName();
                 }, $blueprint->getImage()->toArray()),
@@ -119,5 +121,20 @@ class SatisfactoryController extends AbstractController
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $sbpcfgFile->getSbpcfgName());
 
         return $response;
+    }
+
+    #[Route('/satisfactory/blueprint/{id}/thank', name: 'app_satisfactory_thank', methods: ['POST'])]
+    public function thank(int $id): Response
+    {
+        $blueprint = $this->satisfactoryBpRepository->find($id);
+        if (!$blueprint) {
+            return new JsonResponse(['error' => 'Blueprint not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $blueprint->incrementThankCount();
+        $this->entityManager->persist($blueprint);
+        $this->entityManager->flush();
+
+        return new JsonResponse(['thankCount' => $blueprint->getThankCount()]);
     }
 }
