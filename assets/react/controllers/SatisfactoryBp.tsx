@@ -1,7 +1,8 @@
-import * as React from "react"
-import { Carousel } from "@/components/ui/carousel"
-import { Comment } from "@/components/ui/comment-section"
-import { Button } from '@/components/ui/button'
+// components/SatisfactoryBp.tsx
+
+import * as React from "react";
+import { Carousel } from "@/components/ui/carousel";
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -9,19 +10,20 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card'
+} from '@/components/ui/card';
 import { CalendarClock, Download, Hammer, RefreshCcw, User } from "lucide-react";
 
 interface Block {
+    id: number; // Ajout de l'ID
     title: string;
     description: string;
     author: string;
     createdAt: string;
     updatedAt: string;
-    downloadUrlSbp: string;
-    downloadUrlSbpcfg: string;
     downloadCount: number;
     images: string[];
+    sbp: string[];
+    sbpcfg: string[];
 }
 
 interface SatisfactoryBpProps {
@@ -31,8 +33,8 @@ interface SatisfactoryBpProps {
 const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
     return (
         <div className="flex flex-wrap justify-center gap-12">
-            {blocks.map((block, index) => (
-                <div key={index} className="w-[350px]">
+            {blocks.map((block) => (
+                <div key={block.id} className="w-[350px]">
                     <Card className="flex flex-col h-full">
                         <CardHeader>
                             {/* Title */}
@@ -65,7 +67,7 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
                             <div className="flex items-center justify-end">
                                 <span className="text-xs uppercase">Downloads</span>
                                 <Download className="mr-2 ms-2 text-secondary" />
-                                <span className="font-bold">{block.downloadCount}12</span>
+                                <span className="font-bold">{block.downloadCount}</span>
                             </div>
                         </CardHeader>
                         <CardContent className="flex-grow">
@@ -84,8 +86,12 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
                             />
                         </CardContent>
                         <CardFooter className="flex flex-wrap justify-center gap-4 mt-auto">
-                            <Button variant="default">Download .sbp</Button>
-                            <Button variant="neutral">Download .sbpcfg (optional)</Button>
+                            <a href={`/satisfactory/blueprint/${block.id}/download/sbp`}>
+                                <Button variant="default">Télécharger .sbp</Button>
+                            </a>
+                            <a href={`/satisfactory/blueprint/${block.id}/download/sbpcfg`}>
+                                <Button variant="neutral">Télécharger .sbpcfg (optionnel)</Button>
+                            </a>
                         </CardFooter>
                     </Card>
                 </div>
@@ -94,4 +100,4 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
     )
 }
 
-export default SatisfactoryBp
+export default SatisfactoryBp;

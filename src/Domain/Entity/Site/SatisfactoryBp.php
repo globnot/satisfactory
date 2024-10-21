@@ -30,12 +30,6 @@ class SatisfactoryBp
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $author = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $downloadUrlSbp = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $downloadUrlSbpcfg = null;
-
     #[ORM\Column(nullable: true)]
     private ?int $downloadCount = null;
 
@@ -137,30 +131,6 @@ class SatisfactoryBp
         return $this;
     }
 
-    public function getDownloadUrlSbp(): ?string
-    {
-        return $this->downloadUrlSbp;
-    }
-
-    public function setDownloadUrlSbp(?string $downloadUrlSbp): static
-    {
-        $this->downloadUrlSbp = $downloadUrlSbp;
-
-        return $this;
-    }
-
-    public function getDownloadUrlSbpcfg(): ?string
-    {
-        return $this->downloadUrlSbpcfg;
-    }
-
-    public function setDownloadUrlSbpcfg(?string $downloadUrlSbpcfg): static
-    {
-        $this->downloadUrlSbpcfg = $downloadUrlSbpcfg;
-
-        return $this;
-    }
-
     public function getDownloadCount(): ?int
     {
         return $this->downloadCount;
@@ -169,6 +139,13 @@ class SatisfactoryBp
     public function setDownloadCount(?int $downloadCount): static
     {
         $this->downloadCount = $downloadCount;
+
+        return $this;
+    }
+
+    public function incrementDownloadCount(): static
+    {
+        ++$this->downloadCount;
 
         return $this;
     }
