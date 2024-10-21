@@ -5,6 +5,7 @@ namespace App\Domain\Entity\Site;
 use App\Infrastructure\Persistence\Repository\Site\SatisfactorySbpcfgRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: SatisfactorySbpcfgRepository::class)]
@@ -17,6 +18,10 @@ class SatisfactorySbpcfg
     private ?int $id = null;
 
     #[Vich\UploadableField(mapping: 'satisfactory_sbpcfg', fileNameProperty: 'sbpcfgName')]
+    #[Assert\File(
+        mimeTypes: ['application/x-sbpcfg'],
+        mimeTypesMessage: 'Veuillez télécharger un fichier SBPCFG valide.'
+    )]
     private ?File $sbpcfgFile = null;
 
     #[ORM\Column]
