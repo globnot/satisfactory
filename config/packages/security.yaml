@@ -7,8 +7,14 @@ security:
     # used to reload user from session & other features (e.g. switch_user)
     app_user_provider:
       entity:
-        class: App\Entity\User
+        class: App\Domain\Entity\Security\User
         property: email
+    # used to reload user from session & other features (e.g. switch_user)
+    # used to reload user from session & other features (e.g. switch_user)
+
+  role_hierarchy:
+    ROLE_ADMIN:       ROLE_USER
+    ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
   firewalls:
     dev:
@@ -26,6 +32,8 @@ security:
         lifetime: 604800 # 1 week in seconds
       logout:
         path: app_logout
+        # where to redirect after logout
+        # target: app_any_route
         # where to redirect after logout
         # target: app_any_route
 

@@ -22,7 +22,7 @@ doctrine:
                 is_bundle: false
                 dir: "%kernel.project_dir%/src/Domain/Entity"
                 prefix: 'App\Domain\Entity'
-                alias: Domain
+                alias: App\Domain
 
 when@test:
     doctrine:
