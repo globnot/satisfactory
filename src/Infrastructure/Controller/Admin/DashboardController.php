@@ -20,12 +20,12 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Globnot');
+            ->setTitle('Globnot Admin Area');
     }
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToRoute('Home', 'fa fa-home', 'app_home');
         yield MenuItem::linkToCrud('SatisfactoryBp', 'fas fa-list', SatisfactoryBp::class);
     }
 }

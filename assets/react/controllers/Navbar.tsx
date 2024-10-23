@@ -22,7 +22,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-export default function Navbar({ path }) {
+export default function Navbar({ path, roles }) {
+  const isSuperAdmin = roles.includes('ROLE_SUPERADMIN');
+
   return (
     <div className="flex items-center h-16 max-w-screen-xl mx-auto sm:h-24">
 
@@ -56,22 +58,24 @@ export default function Navbar({ path }) {
               </a>
             </MenubarContent>
           </MenubarMenu>
-          <MenubarMenu>
-            <MenubarTrigger>Admin</MenubarTrigger>
-            <MenubarContent>
-              <a href={path.twitchOverlayWebcam}>
-                <MenubarItem inset>
-                  Overlay
-                </MenubarItem>
-              </a>
-              <MenubarSeparator />
-              <a href={path.admin}>
-                <MenubarItem inset>
-                  Admin
-                </MenubarItem>
-              </a>
-            </MenubarContent>
-          </MenubarMenu>
+          {isSuperAdmin && (
+            <MenubarMenu>
+              <MenubarTrigger>Admin</MenubarTrigger>
+              <MenubarContent>
+                <a href={path.twitchOverlayWebcam}>
+                  <MenubarItem inset>
+                    Overlay
+                  </MenubarItem>
+                </a>
+                <MenubarSeparator />
+                <a href={path.admin}>
+                  <MenubarItem inset>
+                    Admin
+                  </MenubarItem>
+                </a>
+              </MenubarContent>
+            </MenubarMenu>
+          )}
         </Menubar>
 
       </div>
@@ -106,6 +110,13 @@ export default function Navbar({ path }) {
             <a href={path.satisfactory_blueprints}>
               Satisfactory Blueprints
             </a>
+          </nav>
+          <nav className="flex flex-col items-start mt-4 space-y-4 font-semibold">
+            {isSuperAdmin && (
+              <a href={path.admin}>
+                Admin
+              </a>
+            )}
           </nav>
         </SheetContent>
       </Sheet>
