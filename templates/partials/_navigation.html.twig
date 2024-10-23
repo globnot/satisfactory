@@ -1,13 +1,15 @@
 {% set path = {
-	'home': path ('app_home'),
-	'contact': path ('app_contact'),
-	'legal': path ('app_legal'),
-	'satisfactory_blueprints': path ('app_satisfactory_blueprints'),
-	'twitchOverlayWebcam': path ('twitch_overlay_webcam'),
-	'admin': path ('admin'),
+    'home': path('app_home'),
+    'contact': path('app_contact'),
+    'legal': path('app_legal'),
+    'satisfactory_blueprints': path('app_satisfactory_blueprints'),
+    'twitchOverlayWebcam': path('twitch_overlay_webcam'),
+    'admin': path('admin'),
 } %}
 
+{% set roles = app.user ? app.user.roles : [] %}
+
 {# Navbar #}
-<div class="sticky top-0 z-50 w-full border-b-4 bg-bgSecondary dark:bg-secondaryBlack border-black dark:border-black bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" {{ react_component('Navbar', { 'path' : path } ) }}>
+<div class="sticky top-0 z-50 w-full border-b-4 bg-bgSecondary dark:bg-secondaryBlack border-black dark:border-black bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" {{ react_component('Navbar', { 'path': path, 'roles': roles } ) }}>
 	<twig:ux:icon name="line-md:loading-loop" class="w-10"/>
 </div>
