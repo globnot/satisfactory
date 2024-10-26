@@ -46,11 +46,13 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
                 },
             });
 
-            if (!response.ok) {
-                throw new Error('Erreur lors de l\'envoi du remerciement');
-            }
-
             const data = await response.json();
+
+            if (!response.ok) {
+                // Afficher une notification ou un message d'erreur
+                alert(data.error || 'Erreur lors de l\'envoi du remerciement');
+                return;
+            }
 
             // Mettre à jour le thankCount dans l'état local
             setBlocksState(prevBlocks => prevBlocks.map(block => {
@@ -61,7 +63,8 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
             }));
         } catch (error) {
             console.error(error);
-            // Optionnel : afficher une notification d'erreur à l'utilisateur
+            // Afficher une notification d'erreur à l'utilisateur
+            alert('Erreur réseau, veuillez réessayer plus tard.');
         }
     };
 
@@ -94,7 +97,7 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
                                 <span className="font-bold">{block.author}</span>
                             </div>
                             <div className="flex items-center justify-end">
-                                <span className="text-xs uppercase">Downloads</span>
+                                <span className="text-xs uppercase">Téléchargements</span>
                                 <Download className="mr-2 ms-2 text-secondary" />
                                 <span className="font-bold">{block.downloadCount}</span>
                             </div>
@@ -116,10 +119,10 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
                         </CardContent>
                         <CardFooter className="flex flex-wrap justify-center gap-4 mt-auto">
                             <a href={`/satisfactory/blueprint/${block.id}/download/sbp`}>
-                                <Button variant="default">Télécharger .sbp</Button>
+                                <Button variant="default">Download .sbp (indispensable)</Button>
                             </a>
                             <a href={`/satisfactory/blueprint/${block.id}/download/sbpcfg`}>
-                                <Button variant="neutral">Télécharger .sbpcfg (optionnel)</Button>
+                                <Button variant="neutral">Download .sbpcfg (optionnel)</Button>
                             </a>
                             <Button
                                 variant="secondary"
