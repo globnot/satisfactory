@@ -8,11 +8,11 @@ export default function SatisfactoryBpTri({ currentSort, currentDirection, sortD
         <div className="flex flex-wrap gap-4 mb-6 sorting-options">
             <Button
                 variant="neutral"
-                onClick={() => window.location.href = sortDownloadPath}
-                className={currentSort === 'downloadCount' ? 'active' : ''}
+                onClick={() => window.location.href = sortDatePath}
+                className={currentSort === 'createdAt' ? 'active' : ''}
             >
-                Nombre de téléchargements
-                {currentSort === 'downloadCount' && (
+                Date d'ajout
+                {currentSort === 'createdAt' && (
                     <span className="ms-1 text-secondary sort-indicator">
                         {currentDirection === 'DESC' ? <ArrowUpWideNarrow /> : <ArrowDownWideNarrow />}
                     </span>
@@ -20,11 +20,11 @@ export default function SatisfactoryBpTri({ currentSort, currentDirection, sortD
             </Button>
             <Button
                 variant="neutral"
-                onClick={() => window.location.href = sortDatePath}
-                className={currentSort === 'createdAt' ? 'active' : ''}
+                onClick={() => window.location.href = sortDownloadPath}
+                className={currentSort === 'downloadCount' ? 'active' : ''}
             >
-                Date d'ajout
-                {currentSort === 'createdAt' && (
+                Nombre de téléchargements
+                {currentSort === 'downloadCount' && (
                     <span className="ms-1 text-secondary sort-indicator">
                         {currentDirection === 'DESC' ? <ArrowUpWideNarrow /> : <ArrowDownWideNarrow />}
                     </span>
