@@ -54,7 +54,7 @@ export default function Carousel({ items = [], autoSlideInterval = 3000 }: Carou
 
   return (
     <div className="relative max-w-md mx-auto w-60">
-      <div className="overflow-hidden bg-white border-2 rounded-lg shadow-md border-border dark:border-darkBorder dark:shadow-dark dark:bg-gray-800">
+      <div className="overflow-hidden bg-white border-2 rounded-lg shadow-dark border-border dark:border-darkBorder dark:shadow-dark dark:bg-gray-800">
         <div
           className="flex transition-transform duration-300 ease-in-out"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
