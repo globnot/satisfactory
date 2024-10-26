@@ -33,8 +33,8 @@ class SatisfactoryController extends AbstractController
                 'title' => $blueprint->getTitle(),
                 'description' => $blueprint->getDescription(),
                 'author' => $blueprint->getAuthor(),
-                'createdAt' => $blueprint->getCreatedAt()->format('Y-m-d H:i:s'),
-                'updatedAt' => $blueprint->getUpdatedAt()->format('Y-m-d H:i:s'),
+                'createdAt' => $blueprint->getCreatedAt()->format('d-m-Y | H:i'),
+                'updatedAt' => $blueprint->getUpdatedAt()->format('d-m-Y | H:i'),
                 'downloadCount' => $blueprint->getDownloadCount(),
                 'thankCount' => $blueprint->getThankCount(),
                 'images' => array_map(function ($image) {
