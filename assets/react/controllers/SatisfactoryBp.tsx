@@ -11,6 +11,12 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { CalendarClock, Download, Hammer, Heart, RefreshCcw, User } from "lucide-react";
 
 interface Block {
@@ -96,10 +102,10 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
                                 <User className="mr-2 text-secondary" />
                                 <span className="font-bold">{block.author}</span>
                             </div>
-                            <div className="flex items-center justify-end">
-                                <span className="text-xs uppercase">Téléchargements</span>
-                                <Download className="mr-2 ms-2 text-secondary" />
+                            <div className="flex items-center justify-start">
+                                <Download className="mr-2 text-secondary" />
                                 <span className="font-bold">{block.downloadCount}</span>
+                                <span className="text-xs uppercase ms-2">Downloads</span>
                             </div>
                         </CardHeader>
                         <CardContent className="flex-grow">
@@ -122,7 +128,19 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
                                 <Button variant="default">Download .sbp (indispensable)</Button>
                             </a>
                             <a href={`/satisfactory/blueprint/${block.id}/download/sbpcfg`}>
-                                <Button variant="neutral">Download .sbpcfg (optionnel)</Button>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button variant="neutral">
+                                                Download .sbpcfg (optionnel)
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Nécessaire uniquement si vous souhaitez conserver la description, l'icône et la couleur par défaut du plan</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+
                             </a>
                             <Button
                                 variant="secondary"
