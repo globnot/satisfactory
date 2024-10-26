@@ -79,35 +79,53 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
             {blocksState.map((block) => (
                 <div key={block.id} className="w-[350px]">
                     <Card className="flex flex-col h-full">
+
                         <CardHeader>
+
+                            {/* Title */}
                             <CardTitle className="uppercase">
                                 <div className="flex items-center justify-start">
                                     <Hammer size={28} className="mr-2 text-secondary" />{block.title}
                                 </div>
                             </CardTitle>
+
+                            {/* Description */}
                             <CardDescription>
-                                {block.description}
+                                <div className="italic">
+                                    "{block.description}"
+                                </div>
                             </CardDescription>
-                            <div className="pt-2">
-                                <div className="flex items-start justify-start">
-                                    <CalendarClock size={18} className="mr-2 text-secondary" />
-                                    <span className="text-sm">{block.createdAt}</span>
+
+                            {/* Dates */}
+                            <div className="flex items-start justify-start pt-4">
+                                <CalendarClock size={16} className="mr-2 text-secondary" />
+                                <span className="text-xs">{block.createdAt}</span>
+                            </div>
+                            <div className="flex items-start justify-start">
+                                <RefreshCcw size={16} className="mr-2 text-secondary" />
+                                <span className="text-xs">{block.updatedAt}</span>
+                            </div>
+
+
+                            <div className="flex items-center justify-between pt-4">
+
+                                {/* Author */}
+                                <div className="flex items-center justify-start">
+                                    <User size={20} className="mr-2 text-secondary" />
+                                    <span className="font-bold">{block.author}</span>
                                 </div>
-                                <div className="flex items-start justify-start">
-                                    <RefreshCcw size={18} className="mr-2 text-secondary" />
-                                    <span className="text-sm">{block.updatedAt}</span>
+
+                                {/* Download count */}
+                                <div className="flex items-center justify-end">
+                                    <Download size={20} className="mr-2 text-secondary" />
+                                    <span className="font-bold">{block.downloadCount}</span>
+                                    <span className="text-xs uppercase ms-2">Downloads</span>
                                 </div>
                             </div>
-                            <div className="flex items-center justify-start">
-                                <User className="mr-2 text-secondary" />
-                                <span className="font-bold">{block.author}</span>
-                            </div>
-                            <div className="flex items-center justify-start">
-                                <Download className="mr-2 text-secondary" />
-                                <span className="font-bold">{block.downloadCount}</span>
-                                <span className="text-xs uppercase ms-2">Downloads</span>
-                            </div>
+
                         </CardHeader>
+
+                        {/* Carousel */}
                         <CardContent className="flex-grow">
                             <Carousel
                                 items={block.images.map((src, imgIndex) => ({
@@ -123,25 +141,33 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
                                 autoSlideInterval={0}
                             />
                         </CardContent>
+
+                        {/* Footer */}
                         <CardFooter className="flex flex-wrap justify-center gap-4 mt-auto">
+
+                            {/* Download sbp button */}
                             <a href={`/satisfactory/blueprint/${block.id}/download/sbp`}>
                                 <Button variant="default">Download .sbp (indispensable)</Button>
                             </a>
+
+                            {/* Download sbpcfg button */}
                             <a href={`/satisfactory/blueprint/${block.id}/download/sbpcfg`}>
                                 <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
-                                            <Button variant="neutral">
+                                            <Button variant="neutral" size="sm" className="text-xs">
                                                 Download .sbpcfg (optionnel)
                                             </Button>
+
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p>Nécessaire uniquement si vous souhaitez conserver la description, l'icône et la couleur par défaut du plan</p>
+                                            <p>Uniquement si vous souhaitez conserver la description, l'icône et la couleur</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </TooltipProvider>
-
                             </a>
+
+                            {/* Thank button */}
                             <Button
                                 variant="secondary"
                                 onClick={() => handleThank(block.id)}
@@ -154,6 +180,7 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
                                 <Heart size={20} className=" text-secondary ms-2" strokeWidth={3} />
                             </div>
                         </CardFooter>
+
                     </Card>
                 </div>
             ))}

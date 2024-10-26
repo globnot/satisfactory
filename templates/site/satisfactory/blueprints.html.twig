@@ -7,6 +7,23 @@
 
 {% block body %}
 
+	{% set triProps = {
+        currentSort: currentSort,
+        currentDirection: currentDirection,
+        sortDownloadPath: path('app_satisfactory_blueprints', { 
+            sort: 'downloadCount', 
+            direction: currentSort == 'downloadCount' and currentDirection == 'DESC' ? 'ASC' : 'DESC' 
+        }),
+        sortDatePath: path('app_satisfactory_blueprints', { 
+            sort: 'createdAt', 
+            direction: currentSort == 'createdAt' and currentDirection == 'DESC' ? 'ASC' : 'DESC' 
+        })
+    } %}
+
+	<div {{ react_component('SatisfactoryBpTri', triProps) }}>
+		<twig:ux:icon name="line-md:loading-loop" class="w-10"/>
+	</div>
+
 	<div {{ react_component('SatisfactoryBp', { blocks: blocks } ) }}>
 		<twig:ux:icon name="line-md:loading-loop" class="w-10"/>
 	</div>

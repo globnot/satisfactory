@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -23,18 +24,38 @@ class SatisfactoryController extends AbstractController
     }
 
     #[Route('/satisfactory/blueprints', name: 'app_satisfactory_blueprints')]
-    public function blueprints(): Response
+    public function blueprints(Request $request): Response
     {
-        $blueprints = $this->satisfactoryBpRepository->findAll();
+        // Récupérer les paramètres de tri et de direction avec des valeurs par défaut
+        $sort = $request->query->get('sort', 'createdAt');
+        $direction = strtoupper($request->query->get('direction', 'DESC'));
 
+        // Définir les critères de tri autorisés
+        $allowedSorts = ['createdAt', 'downloadCount'];
+        $allowedDirections = ['ASC', 'DESC'];
+
+        // Valider les paramètres
+        if (!in_array($sort, $allowedSorts)) {
+            throw $this->createNotFoundException('Critère de tri invalide');
+        }
+
+        if (!in_array($direction, $allowedDirections)) {
+            throw $this->createNotFoundException('Direction de tri invalide');
+        }
+
+        // Définir l'ordre de tri
+        $order = [$sort => $direction];
+        $blueprints = $this->satisfactoryBpRepository->findBy([], $order);
+
+        // Transformer les blueprints pour le template
         $blocks = array_map(function ($blueprint) {
             return [
                 'id' => $blueprint->getId(),
                 'title' => $blueprint->getTitle(),
                 'description' => $blueprint->getDescription(),
                 'author' => $blueprint->getAuthor(),
-                'createdAt' => $blueprint->getCreatedAt()->format('Y-m-d H:i:s'),
-                'updatedAt' => $blueprint->getUpdatedAt()->format('Y-m-d H:i:s'),
+                'createdAt' => $blueprint->getCreatedAt()->format('d-m-Y | H:i'),
+                'updatedAt' => $blueprint->getUpdatedAt()->format('d-m-Y | H:i'),
                 'downloadCount' => $blueprint->getDownloadCount(),
                 'thankCount' => $blueprint->getThankCount(),
                 'images' => array_map(function ($image) {
@@ -53,6 +74,8 @@ class SatisfactoryController extends AbstractController
             'site/satisfactory/blueprints.html.twig',
             [
                 'blocks' => $blocks,
+                'currentSort' => $sort,
+                'currentDirection' => $direction, // Passer la direction actuelle au template
             ]
         );
     }
