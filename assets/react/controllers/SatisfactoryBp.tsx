@@ -17,7 +17,6 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Separator } from "@/components/ui/separator"
 import { CalendarClock, Download, Hammer, Heart, RefreshCcw, User } from "lucide-react";
 
 interface Block {
