@@ -11,6 +11,12 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { CalendarClock, Download, Hammer, Heart, RefreshCcw, User } from "lucide-react";
 
 interface Block {
@@ -46,11 +52,13 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
                 },
             });
 
-            if (!response.ok) {
-                throw new Error('Erreur lors de l\'envoi du remerciement');
-            }
-
             const data = await response.json();
+
+            if (!response.ok) {
+                // Afficher une notification ou un message d'erreur
+                alert(data.error || 'Erreur lors de l\'envoi du remerciement');
+                return;
+            }
 
             // Mettre à jour le thankCount dans l'état local
             setBlocksState(prevBlocks => prevBlocks.map(block => {
@@ -61,7 +69,8 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
             }));
         } catch (error) {
             console.error(error);
-            // Optionnel : afficher une notification d'erreur à l'utilisateur
+            // Afficher une notification d'erreur à l'utilisateur
+            alert('Erreur réseau, veuillez réessayer plus tard.');
         }
     };
 
@@ -93,10 +102,10 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
                                 <User className="mr-2 text-secondary" />
                                 <span className="font-bold">{block.author}</span>
                             </div>
-                            <div className="flex items-center justify-end">
-                                <span className="text-xs uppercase">Downloads</span>
-                                <Download className="mr-2 ms-2 text-secondary" />
+                            <div className="flex items-center justify-start">
+                                <Download className="mr-2 text-secondary" />
                                 <span className="font-bold">{block.downloadCount}</span>
+                                <span className="text-xs uppercase ms-2">Downloads</span>
                             </div>
                         </CardHeader>
                         <CardContent className="flex-grow">
@@ -116,10 +125,22 @@ const SatisfactoryBp: React.FC<SatisfactoryBpProps> = ({ blocks }) => {
                         </CardContent>
                         <CardFooter className="flex flex-wrap justify-center gap-4 mt-auto">
                             <a href={`/satisfactory/blueprint/${block.id}/download/sbp`}>
-                                <Button variant="default">Télécharger .sbp</Button>
+                                <Button variant="default">Download .sbp (indispensable)</Button>
                             </a>
                             <a href={`/satisfactory/blueprint/${block.id}/download/sbpcfg`}>
-                                <Button variant="neutral">Télécharger .sbpcfg (optionnel)</Button>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button variant="neutral">
+                                                Download .sbpcfg (optionnel)
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Nécessaire uniquement si vous souhaitez conserver la description, l'icône et la couleur par défaut du plan</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+
                             </a>
                             <Button
                                 variant="secondary"

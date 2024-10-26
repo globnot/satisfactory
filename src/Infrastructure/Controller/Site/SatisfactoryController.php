@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -124,13 +125,27 @@ class SatisfactoryController extends AbstractController
     }
 
     #[Route('/satisfactory/blueprint/{id}/thank', name: 'app_satisfactory_thank', methods: ['POST'])]
-    public function thank(int $id): Response
-    {
+    public function thank(
+        int $id,
+        SessionInterface $session,
+    ): Response {
         $blueprint = $this->satisfactoryBpRepository->find($id);
         if (!$blueprint) {
-            return new JsonResponse(['error' => 'Blueprint not found'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['error' => 'Blueprint introuvable'], Response::HTTP_NOT_FOUND);
         }
 
+        // Récupérer les blueprints déjà remerciés depuis la session
+        $thankedBlueprints = $session->get('thanked_blueprints', []);
+
+        if (in_array($id, $thankedBlueprints)) {
+            return new JsonResponse(['error' => 'Vous avez déjà remercié pour ce blueprint'], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Ajouter le blueprint aux blueprints remerciés
+        $thankedBlueprints[] = $id;
+        $session->set('thanked_blueprints', $thankedBlueprints);
+
+        // Incrémenter le compteur de remerciements
         $blueprint->incrementThankCount();
         $this->entityManager->persist($blueprint);
         $this->entityManager->flush();
