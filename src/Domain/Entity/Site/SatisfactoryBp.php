@@ -224,6 +224,7 @@ class SatisfactoryBp
         if (!$this->sbp->contains($sbp)) {
             $this->sbp->add($sbp);
             $sbp->setSatisfactoryBp($this);
+            $this->setUpdatedAt(new \DateTimeImmutable());
         }
 
         return $this;
@@ -235,6 +236,7 @@ class SatisfactoryBp
             // set the owning side to null (unless already changed)
             if ($sbp->getSatisfactoryBp() === $this) {
                 $sbp->setSatisfactoryBp(null);
+                $this->setUpdatedAt(new \DateTimeImmutable());
             }
         }
 
