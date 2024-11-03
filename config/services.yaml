@@ -42,6 +42,10 @@ services:
     App\Application\Interface\Twitch\TwitchSubscriberInterface:
         alias: App\Infrastructure\Service\Twitch\TwitchSubscriberService
 
+    App\Infrastructure\Service\Twitch\TwitchChatBotService:
+        arguments:
+            $twitchChatVoteRepository: '@App\Infrastructure\Persistence\Repository\Twitch\TwitchChatVoteRepository'
+
 # Event Subscriber
 
 

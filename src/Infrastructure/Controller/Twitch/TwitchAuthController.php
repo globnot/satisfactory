@@ -22,7 +22,7 @@ class TwitchAuthController extends AbstractController
     public function login(): RedirectResponse
     {
         $redirectUri = $this->generateUrl('twitch_auth', [], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
-        $scopes = 'channel:read:subscriptions';
+        $scopes = 'channel:read:subscriptions chat:read chat:edit';
 
         $url = $this->twitchApiClient->getAuthorizationUrl($redirectUri, $scopes);
 
