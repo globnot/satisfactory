@@ -7,6 +7,8 @@ parameters:
     twitch.client_id: '%env(TWITCH_CLIENT_ID)%'
     twitch.client_secret: '%env(TWITCH_CLIENT_SECRET)%'
     twitch.broadcaster_id: '%env(TWITCH_BROADCASTER_ID)%'
+    twitch.username: '%env(TWITCH_USERNAME)%'
+    twitch.channel: '%env(TWITCH_CHANNEL)%'
 
 services:
     # default configuration for services in *this* file
@@ -26,6 +28,8 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+# Service
+
     App\Infrastructure\Client\Twitch\TwitchApiClient:
         arguments:
             $clientId: '%twitch.client_id%'
@@ -36,18 +40,16 @@ services:
             $clientId: '%twitch.client_id%'
             $broadcasterId: '%twitch.broadcaster_id%'
 
+# Interface
+
     App\Application\Interface\Twitch\TwitchApiInterface:
         alias: App\Infrastructure\Client\Twitch\TwitchApiClient
 
     App\Application\Interface\Twitch\TwitchSubscriberInterface:
         alias: App\Infrastructure\Service\Twitch\TwitchSubscriberService
 
-    App\Infrastructure\Service\Twitch\TwitchChatBotService:
-        arguments:
-            $twitchChatVoteRepository: '@App\Infrastructure\Persistence\Repository\Twitch\TwitchChatVoteRepository'
-
-# Event Subscriber
-
+    App\Application\Interface\Twitch\TwitchAccessTokenInterface:
+        alias: App\Infrastructure\Service\Twitch\TwitchAccessTokenService
 
 # VichUploader Namer
     App\Infrastructure\Namer\Site\SatisfactorySbpNamer:

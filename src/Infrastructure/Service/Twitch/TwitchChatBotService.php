@@ -2,47 +2,32 @@
 
 namespace App\Infrastructure\Service\Twitch;
 
-use App\Application\Interface\Twitch\TwitchApiInterface;
-use App\Domain\Entity\Twitch\TwitchChatVote;
-use App\Infrastructure\Persistence\Repository\Twitch\TwitchChatVoteRepository;
-use App\Infrastructure\Persistence\Service\Twitch\TwitchTokenStorageService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Application\Interface\Twitch\TwitchAccessTokenInterface;
 use GhostZero\Tmi\Client;
 use GhostZero\Tmi\ClientOptions;
 use GhostZero\Tmi\Events\Twitch\MessageEvent;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Domain\Entity\Twitch\TwitchChatVote;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class TwitchChatBotService
 {
     private Client $client;
 
     public function __construct(
-        private TwitchChatVoteRepository $twitchChatVoteRepository,
-        private TwitchTokenStorageService $twitchTokenStorageService,
-        private TwitchApiInterface $twitchApiInterface,
+        private TwitchAccessTokenInterface $twitchAccessTokenInterface,
         private EntityManagerInterface $entityManager,
+        private ParameterBagInterface $parameterBag,
     ) {
     }
 
     public function run()
     {
-        // Gestion du token OAuth
-        $tokens = $this->twitchTokenStorageService->getTokens();
-        $accessToken = $tokens['access_token'] ?? null;
-        $refreshToken = $tokens['refresh_token'] ?? null;
-        $expiresAt = $tokens['expires_at'] ?? null;
+        $accessToken = $this->twitchAccessTokenInterface->getValidAccessToken();
 
-        if (!$accessToken || !$expiresAt || $expiresAt < time()) {
-            if ($refreshToken) {
-                try {
-                    $tokens = $this->twitchApiInterface->refreshAccessToken($refreshToken);
-                    $this->twitchTokenStorageService->updateTokens($tokens);
-                    $accessToken = $tokens['access_token'];
-                } catch (\Exception $e) {
-                    return ['error' => 'Redirection vers la connexion nécessaire.'];
-                }
-            } else {
-                return ['error' => 'Redirection vers la connexion nécessaire.'];
-            }
+        if (!$accessToken) {
+            echo 'Redirection vers la connexion nécessaire.';
+            return;
         }
 
         $options = new ClientOptions([
@@ -53,10 +38,10 @@ class TwitchChatBotService
                 'rejoin' => true,
             ],
             'identity' => [
-                'username' => 'globnot',
-                'password' => 'oauth:'.$accessToken,
+                'username' => $this->parameterBag->get('twitch.username'),
+                'password' => 'oauth:' . $accessToken,
             ],
-            'channels' => ['globnot'],
+            'channels' => [$this->parameterBag->get('twitch.channel')],
         ]);
 
         $this->client = new Client($options);
@@ -86,7 +71,7 @@ class TwitchChatBotService
                     $this->entityManager->flush();
                     echo "Vote enregistré avec succès pour $username\n";
                 } catch (\Exception $e) {
-                    echo "Erreur lors de l'enregistrement du vote : ".$e->getMessage()."\n";
+                    echo "Erreur lors de l'enregistrement du vote : " . $e->getMessage() . "\n";
                 }
             }
         });

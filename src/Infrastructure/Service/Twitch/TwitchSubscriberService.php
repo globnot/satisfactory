@@ -2,38 +2,23 @@
 
 namespace App\Infrastructure\Service\Twitch;
 
-use App\Application\Interface\Twitch\TwitchApiInterface;
+use App\Application\Interface\Twitch\TwitchAccessTokenInterface;
 use App\Application\Interface\Twitch\TwitchSubscriberInterface;
-use App\Infrastructure\Persistence\Service\Twitch\TwitchTokenStorageService;
 
 class TwitchSubscriberService implements TwitchSubscriberInterface
 {
     public function __construct(
-        private TwitchApiInterface $twitchApiInterface,
+        private TwitchAccessTokenInterface $twitchAccessTokenInterface,
         private TwitchGetSubscriberCountService $twitchGetSubscriberCountService,
-        private TwitchTokenStorageService $twitchTokenStorageService,
     ) {
     }
 
     public function getSubscriberCount(): array
     {
-        $tokens = $this->twitchTokenStorageService->getTokens();
-        $accessToken = $tokens['access_token'] ?? null;
-        $refreshToken = $tokens['refresh_token'] ?? null;
-        $expiresAt = $tokens['expires_at'] ?? null;
+        $accessToken = $this->twitchAccessTokenInterface->getValidAccessToken();
 
-        if (!$accessToken || !$expiresAt || $expiresAt < time()) {
-            if ($refreshToken) {
-                try {
-                    $tokens = $this->twitchApiInterface->refreshAccessToken($refreshToken);
-                    $this->twitchTokenStorageService->updateTokens($tokens);
-                    $accessToken = $tokens['access_token'];
-                } catch (\Exception $e) {
-                    return ['error' => 'Redirection vers la connexion nécessaire.'];
-                }
-            } else {
-                return ['error' => 'Redirection vers la connexion nécessaire.'];
-            }
+        if (!$accessToken) {
+            return ['error' => 'Redirection vers la connexion nécessaire.'];
         }
 
         try {
