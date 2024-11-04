@@ -3,9 +3,9 @@
 namespace App\Infrastructure\Controller\Twitch\Overlay\Api;
 
 use App\Application\Interface\Twitch\TwitchSubscriberInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TwitchOverlayWebcamApiController extends AbstractController
 {

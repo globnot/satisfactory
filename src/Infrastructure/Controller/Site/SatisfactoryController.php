@@ -57,13 +57,13 @@ class SatisfactoryController extends AbstractController
                 'downloadCount' => $blueprint->getDownloadCount(),
                 'thankCount' => $blueprint->getThankCount(),
                 'images' => array_map(function ($image) {
-                    return '/uploads/satisfactory_bp/' . $image->getImageName();
+                    return '/uploads/satisfactory_bp/'.$image->getImageName();
                 }, $blueprint->getImage()->toArray()),
                 'sbp' => array_map(function ($sbp) {
-                    return '/uploads/satisfactory_sbp/' . $sbp->getSbpName();
+                    return '/uploads/satisfactory_sbp/'.$sbp->getSbpName();
                 }, $blueprint->getSbp()->toArray()),
                 'sbpcfg' => array_map(function ($sbpcfg) {
-                    return '/uploads/satisfactory_sbpcfg/' . $sbpcfg->getSbpcfgName();
+                    return '/uploads/satisfactory_sbpcfg/'.$sbpcfg->getSbpcfgName();
                 }, $blueprint->getSbpcfg()->toArray()),
             ];
         }, $blueprints);
@@ -94,7 +94,7 @@ class SatisfactoryController extends AbstractController
 
         // Télécharger le premier fichier SBP
         $sbpFile = $sbpFiles[0];
-        $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/satisfactory_sbp/' . $sbpFile->getSbpName();
+        $filePath = $this->getParameter('kernel.project_dir').'/public/uploads/satisfactory_sbp/'.$sbpFile->getSbpName();
 
         if (!file_exists($filePath)) {
             throw $this->createNotFoundException('File not found');
@@ -127,7 +127,7 @@ class SatisfactoryController extends AbstractController
 
         // Télécharger le premier fichier SBPCFG
         $sbpcfgFile = $sbpcfgFiles[0];
-        $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/satisfactory_sbpcfg/' . $sbpcfgFile->getSbpcfgName();
+        $filePath = $this->getParameter('kernel.project_dir').'/public/uploads/satisfactory_sbpcfg/'.$sbpcfgFile->getSbpcfgName();
 
         if (!file_exists($filePath)) {
             throw $this->createNotFoundException('File not found');

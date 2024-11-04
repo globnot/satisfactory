@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class StartTwitchBotCommand extends Command
 {
     public function __construct(
-        private TwitchChatBotService $twitchChatBotService
+        private TwitchChatBotService $twitchChatBotService,
     ) {
     }
 
