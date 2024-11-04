@@ -1,16 +1,15 @@
 <?php
 
-// src/Infrastructure/Service/Twitch/TwitchChatBotService.php
-
 namespace App\Infrastructure\Service\Twitch;
 
 use App\Application\Interface\Twitch\TwitchAccessTokenInterface;
 use App\Application\Interface\Twitch\TwitchChatBotInterface;
-use App\Domain\Entity\Twitch\TwitchChatVote;
+use App\Application\Interface\Twitch\TwitchChatVoteInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use GhostZero\Tmi\Client;
 use GhostZero\Tmi\ClientOptions;
+use GhostZero\Tmi\Events\Irc\JoinEvent;
 use GhostZero\Tmi\Events\Twitch\MessageEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -21,10 +20,11 @@ class TwitchChatBotService implements TwitchChatBotInterface
 
     public function __construct(
         private TwitchAccessTokenInterface $twitchAccessTokenInterface,
-        private EntityManagerInterface $entityManager,
+        private TwitchChatVoteInterface $twitchChatVoteInterface,
         private ParameterBagInterface $parameterBag,
         private ManagerRegistry $doctrine,
         private LoggerInterface $logger,
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -55,7 +55,11 @@ class TwitchChatBotService implements TwitchChatBotInterface
 
             $this->client = new Client($options);
 
+            // Gestionnaire pour les messages
             $this->client->on(MessageEvent::class, [$this, 'handleMessage']);
+
+            // Gestionnaire pour l'événement de connexion au canal
+            $this->client->on(JoinEvent::class, [$this, 'handleJoin']);
 
             $this->client->connect();
         } catch (\Exception $e) {
@@ -63,53 +67,46 @@ class TwitchChatBotService implements TwitchChatBotInterface
         }
     }
 
-    public function handleMessage(MessageEvent $event): void
+    public function handleJoin(JoinEvent $event): void
     {
-        try {
-            $message = $event->message;
-            $username = $event->user;
+        // Vérifier que c'est le bot qui a rejoint le canal
+        if ($event->user === $this->parameterBag->get('twitch.username')) {
+            $channel = $this->parameterBag->get('twitch.channel');
+            $connectMessage = $this->parameterBag->get('twitch.connect_message');
 
-            $this->logger->info(message: "Message reçu de $username: $message");
-
-            if (preg_match('/^!(\d+)$/', $message, $matches)) {
-                $number = $matches[1];
-
-                if (!ctype_digit($number)) {
-                    $this->logger->error("Erreur : La valeur '$number' n'est pas un entier valide.");
-
-                    return;
-                }
-
-                if (bccomp($number, '-2147483648') < 0 || bccomp($number, '2147483647') > 0) {
-                    $this->logger->error("Erreur : La valeur '$number' dépasse la plage autorisée pour un entier.");
-
-                    return;
-                }
-
-                $number = (int) $number;
-
-                $this->logger->info("$username a enregistré $number");
-
-                $vote = new TwitchChatVote();
-                $vote->setUsername($username);
-                $vote->setGuess($number);
-
-                $this->persistVote($vote);
+            for ($i = 0; $i < 5; ++$i) {
+                $this->client->say($channel, $connectMessage);
             }
-        } catch (\Exception $e) {
-            $this->logger->error('Erreur dans le gestionnaire d\'événements : '.$e->getMessage());
-            $this->resetEntityManager();
+            $this->logger->info('Message de connexion envoyé dans le chat.');
         }
     }
 
-    private function persistVote(TwitchChatVote $vote): void
+    public function handleMessage(MessageEvent $event): void
     {
         try {
-            $this->entityManager->persist($vote);
-            $this->entityManager->flush();
-            $this->logger->info("Succès ----> ({$vote->getGuess()}) pour {$vote->getUsername()}");
+            $message = trim($event->message);
+            $username = $event->user;
+
+            $this->logger->info("Message reçu de $username: $message");
+
+            if (preg_match('/^!(\d+)$/', $message, $matches)) {
+                $guess = (int) $matches[1];
+
+                // Enregistrement du vote
+                $success = $this->twitchChatVoteInterface->registerVote($username, $guess);
+
+                if ($success) {
+                    $confirmationMessage = "[GUESS MY LOOT] Merci $username ! Ta prédiction ($guess) a été enregistrée.";
+                } else {
+                    $confirmationMessage = "[GUESS MY LOOT] Attention $username, tu as déjà voté !";
+                    $this->resetEntityManager();
+                }
+
+                // Envoi du message dans le chat
+                $this->client->say($this->parameterBag->get('twitch.channel'), $confirmationMessage);
+            }
         } catch (\Exception $e) {
-            $this->logger->error('Erreur lors de l\'enregistrement du vote : '.$e->getMessage());
+            $this->logger->error('Erreur dans le gestionnaire d\'événements : '.$e->getMessage());
             $this->resetEntityManager();
         }
     }
