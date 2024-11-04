@@ -19,7 +19,7 @@ class TwitchChatVoteService implements TwitchChatVoteInterface
 
     public function registerVote(string $username, int $guess): bool
     {
-        if ($this->voteRepository->findOneByUsername($username)) {
+        if ($this->voteRepository->findOneBy(['username' => $username])) {
             $this->logger->info("L'utilisateur '$username' a déjà voté.");
 
             return false;
