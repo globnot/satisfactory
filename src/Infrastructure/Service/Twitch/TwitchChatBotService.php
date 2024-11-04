@@ -3,11 +3,11 @@
 namespace App\Infrastructure\Service\Twitch;
 
 use App\Application\Interface\Twitch\TwitchAccessTokenInterface;
+use App\Domain\Entity\Twitch\TwitchChatVote;
+use Doctrine\ORM\EntityManagerInterface;
 use GhostZero\Tmi\Client;
 use GhostZero\Tmi\ClientOptions;
 use GhostZero\Tmi\Events\Twitch\MessageEvent;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Domain\Entity\Twitch\TwitchChatVote;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class TwitchChatBotService
@@ -27,6 +27,7 @@ class TwitchChatBotService
 
         if (!$accessToken) {
             echo 'Redirection vers la connexion nécessaire.';
+
             return;
         }
 
@@ -39,7 +40,7 @@ class TwitchChatBotService
             ],
             'identity' => [
                 'username' => $this->parameterBag->get('twitch.username'),
-                'password' => 'oauth:' . $accessToken,
+                'password' => 'oauth:'.$accessToken,
             ],
             'channels' => [$this->parameterBag->get('twitch.channel')],
         ]);
@@ -71,7 +72,7 @@ class TwitchChatBotService
                     $this->entityManager->flush();
                     echo "Vote enregistré avec succès pour $username\n";
                 } catch (\Exception $e) {
-                    echo "Erreur lors de l'enregistrement du vote : " . $e->getMessage() . "\n";
+                    echo "Erreur lors de l'enregistrement du vote : ".$e->getMessage()."\n";
                 }
             }
         });
