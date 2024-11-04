@@ -51,6 +51,12 @@ services:
     App\Application\Interface\Twitch\TwitchAccessTokenInterface:
         alias: App\Infrastructure\Service\Twitch\TwitchAccessTokenService
 
+# EventListener
+
+    App\Infrastructure\EventListener\TwitchExceptionListener:
+        tags:
+            - { name: 'kernel.event_subscriber' }
+
 # VichUploader Namer
     App\Infrastructure\Namer\Site\SatisfactorySbpNamer:
         public: true

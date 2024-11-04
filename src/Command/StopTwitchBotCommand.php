@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
-    name: 'app:close-votes',
+    name: 'app:twitchbot-stop',
     description: 'Close the votes and announce the winners'
 )]
 class StopTwitchBotCommand extends Command

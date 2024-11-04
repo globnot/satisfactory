@@ -9,22 +9,19 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
-    name: 'app:start-twitch-bot',
+    name: 'app:twitchbot-start',
     description: 'Start the Twitch bot'
 )]
 class StartTwitchBotCommand extends Command
 {
-    private TwitchChatBotService $twitchChatBot;
-
-    public function __construct(TwitchChatBotService $twitchChatBot)
-    {
-        parent::__construct();
-        $this->twitchChatBot = $twitchChatBot;
+    public function __construct(
+        private TwitchChatBotService $twitchChatBotService
+    ) {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->twitchChatBot->run();
+        $this->twitchChatBotService->run();
 
         return Command::SUCCESS;
     }
