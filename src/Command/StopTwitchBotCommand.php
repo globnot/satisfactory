@@ -17,6 +17,7 @@ class StopTwitchBotCommand extends Command
     public function __construct(
         private TwitchChatVoteRepository $twitchChatVoteRepository,
     ) {
+        parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

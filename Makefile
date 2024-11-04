@@ -376,3 +376,13 @@ db-update: ## Update database
 	$(SYMFONY_CONSOLE) doctrine:schema:update --force
 .PHONY: db-update
 #---------------------------------------------#
+
+## === ⭐  COMMANDS =================================================
+tbstart: ## Start Twitch Bot
+	$(SYMFONY_CONSOLE) app:twitchbot-start
+.PHONY: tbstart
+
+tbstop: ## Stop Twitch Bot
+	$(SYMFONY_CONSOLE) app:twitchbot-stop
+.PHONY: tbstop
+#---------------------------------------------#
