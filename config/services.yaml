@@ -35,7 +35,7 @@ services:
             $clientId: '%twitch.client_id%'
             $clientSecret: '%twitch.client_secret%'
 
-    App\Infrastructure\Service\Twitch\TwitchGetSubscriberCountService:
+    App\Infrastructure\Service\Twitch\TwitchSubscriberService:
         arguments:
             $clientId: '%twitch.client_id%'
             $broadcasterId: '%twitch.broadcaster_id%'
