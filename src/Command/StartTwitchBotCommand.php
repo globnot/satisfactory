@@ -11,12 +11,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:twitchbot-start',
-    description: 'Démarre le bot Twitch'
 )]
 class StartTwitchBotCommand extends Command
 {
     public function __construct(
-        private TwitchChatBotInterface $twitchChatBotService,
+        private TwitchChatBotInterface $twitchChatBotInterface,
     ) {
         parent::__construct();
     }
@@ -27,7 +26,7 @@ class StartTwitchBotCommand extends Command
         $io->title('Démarrage du bot Twitch');
 
         try {
-            $this->twitchChatBotService->run();
+            $this->twitchChatBotInterface->run();
             $io->success('Le bot Twitch a démarré avec succès.');
         } catch (\Exception $e) {
             $io->error('Erreur lors du démarrage du bot Twitch : '.$e->getMessage());

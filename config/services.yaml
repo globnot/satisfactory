@@ -3,13 +3,8 @@
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
-parameters:
-    twitch.client_id: '%env(TWITCH_CLIENT_ID)%'
-    twitch.client_secret: '%env(TWITCH_CLIENT_SECRET)%'
-    twitch.broadcaster_id: '%env(TWITCH_BROADCASTER_ID)%'
-    twitch.username: '%env(TWITCH_USERNAME)%'
-    twitch.channel: '%env(TWITCH_CHANNEL)%'
-    twitch.connect_message: '[GUESS MY LOOT] Vous pouvez commencer vos prédictions ! Tapez !<nombre> pour participer !'
+imports:
+    - { resource: 'integrations/*.yaml' }
 
 services:
     # default configuration for services in *this* file
@@ -29,17 +24,17 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-# Service
+# Configuration
 
-    App\Infrastructure\Client\Twitch\TwitchApiClient:
+    App\Configuration\TwitchConfiguration:
         arguments:
             $clientId: '%twitch.client_id%'
             $clientSecret: '%twitch.client_secret%'
-
-    App\Infrastructure\Service\Twitch\TwitchSubscriberService:
-        arguments:
-            $clientId: '%twitch.client_id%'
             $broadcasterId: '%twitch.broadcaster_id%'
+            $username: '%twitch.username%'
+            $channel: '%twitch.channel%'
+            $connectMessage: '%twitch.connect_message%'
+            $connectMessageRepeat: '%twitch.connect_message_repeat%'
 
 # Interface
 

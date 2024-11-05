@@ -4,6 +4,7 @@ namespace App\Infrastructure\Service\Twitch;
 
 use App\Application\Interface\Twitch\TwitchAccessTokenInterface;
 use App\Application\Interface\Twitch\TwitchSubscriberInterface;
+use App\Configuration\TwitchConfiguration;
 use App\Domain\Exception\Twitch\TwitchException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -14,8 +15,7 @@ class TwitchSubscriberService implements TwitchSubscriberInterface
     public function __construct(
         private HttpClientInterface $httpClient,
         private TwitchAccessTokenInterface $accessTokenProvider,
-        private string $clientId,
-        private string $broadcasterId,
+        private readonly TwitchConfiguration $twitchConfiguration,
     ) {
     }
 
@@ -30,11 +30,11 @@ class TwitchSubscriberService implements TwitchSubscriberInterface
         try {
             $response = $this->httpClient->request('GET', self::TWITCH_API_URL, [
                 'query' => [
-                    'broadcaster_id' => $this->broadcasterId,
+                    'broadcaster_id' => $this->twitchConfiguration->broadcasterId(),
                 ],
                 'headers' => [
                     'Authorization' => 'Bearer '.$accessToken,
-                    'Client-ID' => $this->clientId,
+                    'Client-ID' => $this->twitchConfiguration->clientId(),
                 ],
             ]);
 
