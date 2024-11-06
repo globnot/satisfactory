@@ -3,21 +3,21 @@
 namespace App\Infrastructure\Client\Twitch;
 
 use App\Application\Interface\Twitch\TwitchApiInterface;
+use App\Configuration\TwitchConfiguration;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class TwitchApiClient implements TwitchApiInterface
 {
     public function __construct(
         private HttpClientInterface $httpClient,
-        private string $clientId,
-        private string $clientSecret,
+        private readonly TwitchConfiguration $twitchConfiguration,
     ) {
     }
 
     public function getAuthorizationUrl(string $redirectUri, string $scopes): string
     {
         return 'https://id.twitch.tv/oauth2/authorize?'.http_build_query([
-            'client_id' => $this->clientId,
+            'client_id' => $this->twitchConfiguration->clientId(),
             'redirect_uri' => $redirectUri,
             'response_type' => 'code',
             'scope' => $scopes,
@@ -28,8 +28,8 @@ class TwitchApiClient implements TwitchApiInterface
     {
         $response = $this->httpClient->request('POST', 'https://id.twitch.tv/oauth2/token', [
             'body' => [
-                'client_id' => $this->clientId,
-                'client_secret' => $this->clientSecret,
+                'client_id' => $this->twitchConfiguration->clientId(),
+                'client_secret' => $this->twitchConfiguration->clientSecret(),
                 'code' => $code,
                 'grant_type' => 'authorization_code',
                 'redirect_uri' => $redirectUri,
@@ -47,8 +47,8 @@ class TwitchApiClient implements TwitchApiInterface
     {
         $response = $this->httpClient->request('POST', 'https://id.twitch.tv/oauth2/token', [
             'body' => [
-                'client_id' => $this->clientId,
-                'client_secret' => $this->clientSecret,
+                'client_id' => $this->twitchConfiguration->clientId(),
+                'client_secret' => $this->twitchConfiguration->clientSecret(),
                 'grant_type' => 'refresh_token',
                 'refresh_token' => $refreshToken,
             ],

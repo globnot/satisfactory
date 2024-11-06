@@ -2,46 +2,55 @@
 
 namespace App\Infrastructure\Service\Twitch;
 
-use App\Application\Interface\Twitch\TwitchApiInterface;
+use App\Application\Interface\Twitch\TwitchAccessTokenInterface;
 use App\Application\Interface\Twitch\TwitchSubscriberInterface;
-use App\Infrastructure\Persistence\Service\Twitch\TwitchTokenStorageService;
+use App\Configuration\TwitchConfiguration;
+use App\Domain\Exception\Twitch\TwitchException;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class TwitchSubscriberService implements TwitchSubscriberInterface
 {
+    private const TWITCH_API_URL = 'https://api.twitch.tv/helix/subscriptions';
+
     public function __construct(
-        private TwitchApiInterface $twitchApiInterface,
-        private TwitchGetSubscriberCountService $twitchGetSubscriberCountService,
-        private TwitchTokenStorageService $twitchTokenStorageService,
+        private HttpClientInterface $httpClient,
+        private TwitchAccessTokenInterface $accessTokenProvider,
+        private readonly TwitchConfiguration $twitchConfiguration,
     ) {
     }
 
-    public function getSubscriberCount(): array
+    public function getSubscriberCount(): int
     {
-        $tokens = $this->twitchTokenStorageService->getTokens();
-        $accessToken = $tokens['access_token'] ?? null;
-        $refreshToken = $tokens['refresh_token'] ?? null;
-        $expiresAt = $tokens['expires_at'] ?? null;
+        $accessToken = $this->accessTokenProvider->getValidAccessToken();
 
-        if (!$accessToken || !$expiresAt || $expiresAt < time()) {
-            if ($refreshToken) {
-                try {
-                    $tokens = $this->twitchApiInterface->refreshAccessToken($refreshToken);
-                    $this->twitchTokenStorageService->updateTokens($tokens);
-                    $accessToken = $tokens['access_token'];
-                } catch (\Exception $e) {
-                    return ['error' => 'Redirection vers la connexion nécessaire.'];
-                }
-            } else {
-                return ['error' => 'Redirection vers la connexion nécessaire.'];
-            }
+        if (empty($accessToken)) {
+            throw new TwitchException('Jeton d\'accès non disponible ou expiré.');
         }
 
         try {
-            $subscriberCount = $this->twitchGetSubscriberCountService->getSubscriberCount($accessToken);
+            $response = $this->httpClient->request('GET', self::TWITCH_API_URL, [
+                'query' => [
+                    'broadcaster_id' => $this->twitchConfiguration->broadcasterId(),
+                ],
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Client-ID' => $this->twitchConfiguration->clientId(),
+                ],
+            ]);
 
-            return ['subscriberCount' => $subscriberCount];
+            if (200 !== $response->getStatusCode()) {
+                throw new TwitchException('Échec de la récupération du nombre d\'abonnés.');
+            }
+
+            $data = $response->toArray();
+
+            if (!isset($data['total'])) {
+                throw new TwitchException('La réponse de l\'API Twitch ne contient pas le nombre total d\'abonnés.');
+            }
+
+            return (int) $data['total'];
         } catch (\Exception $e) {
-            return ['error' => 'Erreur lors de la récupération des abonnés.'];
+            throw new TwitchException('Erreur lors de la communication avec l\'API Twitch: '.$e->getMessage(), 0, $e);
         }
     }
 }

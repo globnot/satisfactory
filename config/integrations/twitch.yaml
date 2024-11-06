@@ -1,0 +1,8 @@
+parameters:
+    twitch.client_id: '%env(TWITCH_CLIENT_ID)%'
+    twitch.client_secret: '%env(TWITCH_CLIENT_SECRET)%'
+    twitch.broadcaster_id: '%env(TWITCH_BROADCASTER_ID)%'
+    twitch.username: '%env(TWITCH_USERNAME)%'
+    twitch.channel: '%env(TWITCH_CHANNEL)%'
+    twitch.connect_message: '[GUESS MY LOOT] Vous pouvez commencer vos prédictions ! Tapez !<nombre> pour participer !'
+    twitch.connect_message_repeat: 5

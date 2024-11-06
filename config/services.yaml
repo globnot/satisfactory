@@ -3,10 +3,8 @@
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
-parameters:
-    twitch.client_id: '%env(TWITCH_CLIENT_ID)%'
-    twitch.client_secret: '%env(TWITCH_CLIENT_SECRET)%'
-    twitch.broadcaster_id: '%env(TWITCH_BROADCASTER_ID)%'
+imports:
+    - { resource: 'integrations/*.yaml' }
 
 services:
     # default configuration for services in *this* file
@@ -26,15 +24,19 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Infrastructure\Client\Twitch\TwitchApiClient:
+# Configuration
+
+    App\Configuration\TwitchConfiguration:
         arguments:
             $clientId: '%twitch.client_id%'
             $clientSecret: '%twitch.client_secret%'
-
-    App\Infrastructure\Service\Twitch\TwitchGetSubscriberCountService:
-        arguments:
-            $clientId: '%twitch.client_id%'
             $broadcasterId: '%twitch.broadcaster_id%'
+            $username: '%twitch.username%'
+            $channel: '%twitch.channel%'
+            $connectMessage: '%twitch.connect_message%'
+            $connectMessageRepeat: '%twitch.connect_message_repeat%'
+
+# Interface
 
     App\Application\Interface\Twitch\TwitchApiInterface:
         alias: App\Infrastructure\Client\Twitch\TwitchApiClient
@@ -42,8 +44,20 @@ services:
     App\Application\Interface\Twitch\TwitchSubscriberInterface:
         alias: App\Infrastructure\Service\Twitch\TwitchSubscriberService
 
-# Event Subscriber
+    App\Application\Interface\Twitch\TwitchAccessTokenInterface:
+        alias: App\Infrastructure\Service\Twitch\TwitchAccessTokenService
 
+    App\Application\Interface\Twitch\TwitchChatBotInterface:
+        alias: App\Infrastructure\Service\Twitch\TwitchChatBotService
+
+    App\Application\Interface\Twitch\TwitchChatVoteInterface:
+        alias: App\Infrastructure\Service\Twitch\TwitchChatVoteService
+
+# EventListener
+
+    App\Infrastructure\EventListener\TwitchExceptionListener:
+        tags:
+            - { name: 'kernel.event_subscriber' }
 
 # VichUploader Namer
     App\Infrastructure\Namer\Site\SatisfactorySbpNamer:

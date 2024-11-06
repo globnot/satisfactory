@@ -4,5 +4,5 @@ namespace App\Application\Interface\Twitch;
 
 interface TwitchSubscriberInterface
 {
-    public function getSubscriberCount(): array;
+    public function getSubscriberCount(): int;
 }
