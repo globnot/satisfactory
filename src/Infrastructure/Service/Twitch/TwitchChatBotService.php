@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Service\Twitch;
 
-use App\Application\Interface\Twitch\TwitchAccessTokenInterface;
-use App\Application\Interface\Twitch\TwitchChatBotInterface;
-use App\Application\Interface\Twitch\TwitchChatVoteInterface;
-use App\Configuration\TwitchConfiguration;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
+use React\EventLoop\Loop;
+use Psr\Log\LoggerInterface;
 use GhostZero\Tmi\ClientOptions;
 use GhostZero\Tmi\Events\Irc\JoinEvent;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use App\Configuration\TwitchConfiguration;
 use GhostZero\Tmi\Events\Twitch\MessageEvent;
-use Psr\Log\LoggerInterface;
+use App\Application\Interface\Twitch\TwitchChatBotInterface;
+use App\Application\Interface\Twitch\TwitchChatVoteInterface;
+use App\Application\Interface\Twitch\TwitchAccessTokenInterface;
 
 class TwitchChatBotService implements TwitchChatBotInterface
 {
@@ -59,7 +60,7 @@ class TwitchChatBotService implements TwitchChatBotInterface
             ]);
 
             // Créez la boucle d'événements
-            $loop = \React\EventLoop\Loop::get();
+            $loop = Loop::get();
 
             // Utilisez la classe CustomClient avec le connecteur personnalisé
             $this->client = new CustomClient($options, $loop);

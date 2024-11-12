@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Service\Twitch;
 
-use GhostZero\Tmi\Client as BaseClient;
+use React\EventLoop\Loop;
 use GhostZero\Tmi\ClientOptions;
 use React\EventLoop\LoopInterface;
 use React\Promise\PromiseInterface;
+use GhostZero\Tmi\Client as BaseClient;
 use React\Socket\Connector as SocketConnector;
 
 class CustomClient extends BaseClient
@@ -19,14 +20,14 @@ class CustomClient extends BaseClient
         parent::__construct($options);
 
         // Si une boucle est fournie, utilisez-la, sinon créez-en une nouvelle
-        $this->loop = $loop ?? \React\EventLoop\Loop::get();
+        $this->loop = $loop ?? Loop::get();
     }
 
     protected function getConnectorPromise(): PromiseInterface
     {
         // Création d'un connecteur avec 'dns' => false pour utiliser le résolveur DNS système
         $connector = new SocketConnector($this->loop, [
-            'dns' => false,
+            'dns' => 'system',
             'tcp' => true,
             'tls' => true,
         ]);
