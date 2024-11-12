@@ -10,7 +10,6 @@ use App\Application\Interface\Twitch\TwitchChatVoteInterface;
 use App\Configuration\TwitchConfiguration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use GhostZero\Tmi\Client;
 use GhostZero\Tmi\ClientOptions;
 use GhostZero\Tmi\Events\Irc\JoinEvent;
 use GhostZero\Tmi\Events\Twitch\MessageEvent;
@@ -18,7 +17,7 @@ use Psr\Log\LoggerInterface;
 
 class TwitchChatBotService implements TwitchChatBotInterface
 {
-    private ?Client $client = null;
+    private ?CustomClient $client = null;
 
     public function __construct(
         private readonly TwitchAccessTokenInterface $twitchAccessTokenInterface,
@@ -51,24 +50,29 @@ class TwitchChatBotService implements TwitchChatBotInterface
                     'secure' => true,
                     'reconnect' => true,
                     'rejoin' => true,
-                    'dns' => false,
                 ],
                 'identity' => [
                     'username' => $this->twitchConfiguration->getUsername(),
-                    'password' => 'oauth:'.$accessToken,
+                    'password' => 'oauth:' . $accessToken,
                 ],
                 'channels' => [$this->twitchConfiguration->getChannel()],
             ]);
 
-            $this->client = new Client($options);
+            // Créez la boucle d'événements
+            $loop = \React\EventLoop\Loop::get();
 
-            // Gestionnaire pour les messages
+            // Utilisez la classe CustomClient avec le connecteur personnalisé
+            $this->client = new CustomClient($options, $loop);
+
+            // Gestionnaires pour les messages et les événements de jointure
             $this->client->on(MessageEvent::class, [$this, 'handleMessage']);
-
-            // Gestionnaire pour l'événement de connexion au canal
             $this->client->on(JoinEvent::class, [$this, 'handleJoin']);
 
+            // Lancez la connexion
             $this->client->connect();
+
+            // Démarrez la boucle d'événements
+            $loop->run();
         } catch (\Throwable $e) {
             $this->loggerInterface->error('Erreur globale : {message}', ['message' => $e->getMessage()]);
         }
