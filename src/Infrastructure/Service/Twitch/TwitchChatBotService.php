@@ -42,11 +42,16 @@ class TwitchChatBotService implements TwitchChatBotInterface
             }
 
             $options = new ClientOptions([
-                'options' => ['debug' => true],
+                'options' => [
+                    'debug' => true,
+                    'server' => 'irc.chat.twitch.tv',
+                    'port' => 6697,
+                ],
                 'connection' => [
                     'secure' => true,
                     'reconnect' => true,
                     'rejoin' => true,
+                    'dns' => false,
                 ],
                 'identity' => [
                     'username' => $this->twitchConfiguration->getUsername(),
