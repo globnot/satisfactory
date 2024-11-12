@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Service\Twitch;
 
-use React\EventLoop\Loop;
-use Psr\Log\LoggerInterface;
-use GhostZero\Tmi\ClientOptions;
-use GhostZero\Tmi\Events\Irc\JoinEvent;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
-use App\Configuration\TwitchConfiguration;
-use GhostZero\Tmi\Events\Twitch\MessageEvent;
+use App\Application\Interface\Twitch\TwitchAccessTokenInterface;
 use App\Application\Interface\Twitch\TwitchChatBotInterface;
 use App\Application\Interface\Twitch\TwitchChatVoteInterface;
-use App\Application\Interface\Twitch\TwitchAccessTokenInterface;
+use App\Configuration\TwitchConfiguration;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use GhostZero\Tmi\Client;
+use GhostZero\Tmi\ClientOptions;
+use GhostZero\Tmi\Events\Irc\JoinEvent;
+use GhostZero\Tmi\Events\Twitch\MessageEvent;
+use Psr\Log\LoggerInterface;
 
 class TwitchChatBotService implements TwitchChatBotInterface
 {
-    private ?CustomClient $client = null;
+    private ?Client $client = null;
 
     public function __construct(
         private readonly TwitchAccessTokenInterface $twitchAccessTokenInterface,
@@ -42,11 +42,7 @@ class TwitchChatBotService implements TwitchChatBotInterface
             }
 
             $options = new ClientOptions([
-                'options' => [
-                    'debug' => true,
-                    'server' => 'irc.chat.twitch.tv',
-                    'port' => 6697,
-                ],
+                'options' => ['debug' => true],
                 'connection' => [
                     'secure' => true,
                     'reconnect' => true,
@@ -59,21 +55,15 @@ class TwitchChatBotService implements TwitchChatBotInterface
                 'channels' => [$this->twitchConfiguration->getChannel()],
             ]);
 
-            // Créez la boucle d'événements
-            $loop = Loop::get();
+            $this->client = new Client($options);
 
-            // Utilisez la classe CustomClient avec le connecteur personnalisé
-            $this->client = new CustomClient($options, $loop);
-
-            // Gestionnaires pour les messages et les événements de jointure
+            // Gestionnaire pour les messages
             $this->client->on(MessageEvent::class, [$this, 'handleMessage']);
+
+            // Gestionnaire pour l'événement de connexion au canal
             $this->client->on(JoinEvent::class, [$this, 'handleJoin']);
 
-            // Lancez la connexion
             $this->client->connect();
-
-            // Démarrez la boucle d'événements
-            $loop->run();
         } catch (\Throwable $e) {
             $this->loggerInterface->error('Erreur globale : {message}', ['message' => $e->getMessage()]);
         }
