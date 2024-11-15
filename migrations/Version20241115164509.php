@@ -10,25 +10,23 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20241019220955 extends AbstractMigration
+final class Version20241115164509 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Add like_count and thank_count to satisfactory_bp';
+        return '';
     }
 
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE satisfactory_bp ADD like_count INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE satisfactory_bp ADD thank_count INT DEFAULT NULL');
+        $this->addSql('DROP SEQUENCE twitch_chat_viewer_id_seq CASCADE');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SCHEMA public');
-        $this->addSql('ALTER TABLE satisfactory_bp DROP like_count');
-        $this->addSql('ALTER TABLE satisfactory_bp DROP thank_count');
+        $this->addSql('CREATE SEQUENCE twitch_chat_viewer_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
     }
 }
