@@ -114,7 +114,7 @@ class VoteSessionController extends AbstractController
         $message = 'Résultats du vote :';
         for ($i = 0; $i < min(5, count($results)); ++$i) {
             $viewer = $results[$i]['viewer'];
-            $message .= "\n" . ($i + 1) . '. ' . $viewer->getId() . " (+{$pointsDistribution[$i]} points)";
+            $message .= "\n".($i + 1).'. '.$viewer->getId()." (+{$pointsDistribution[$i]} points)";
         }
     }
 }
