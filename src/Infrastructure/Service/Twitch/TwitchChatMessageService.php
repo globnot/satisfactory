@@ -40,7 +40,6 @@ class TwitchChatMessageService
             $this->client->on('connected', function () use ($message) {
                 $channel = $this->twitchConfiguration->getChannel();
                 $this->client->say($channel, $message);
-                $this->client->close();
             });
 
             $this->client->connect();

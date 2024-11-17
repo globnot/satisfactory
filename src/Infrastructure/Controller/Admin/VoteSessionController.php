@@ -6,17 +6,16 @@ use App\Domain\Entity\Twitch\TwitchChatRanking;
 use App\Domain\Entity\Twitch\TwitchChatVote;
 use App\Domain\Entity\Twitch\TwitchChatVoteSession;
 use App\Infrastructure\Persistence\Repository\Twitch\TwitchChatVoteSessionRepository;
-use App\Infrastructure\Service\Twitch\TwitchChatMessageService;
+use App\Infrastructure\Service\Twitch\TwitchChatBotService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class VoteSessionController extends AbstractController
 {
     public function __construct(
-        private TwitchChatMessageService $twitchChatMessageService,
+        private TwitchChatBotService $twitchChatBotService,
         private EntityManagerInterface $entityManager,
     ) {
     }
@@ -24,7 +23,7 @@ class VoteSessionController extends AbstractController
     #[Route('/admin/twitch/vote-session', name: 'admin_vote_session_index')]
     public function index(TwitchChatVoteSessionRepository $voteSessionRepository): Response
     {
-        $voteSessions = $voteSessionRepository->findBy([], ['startedAt' => 'DESC']);
+        $voteSessions = $voteSessionRepository->findAll();
 
         return $this->render('admin/twitch/index.html.twig', [
             'vote_sessions' => $voteSessions,
@@ -32,7 +31,7 @@ class VoteSessionController extends AbstractController
     }
 
     #[Route('/admin/twitch/vote-session-new', name: 'admin_vote_session_new')]
-    public function new(Request $request): Response
+    public function new(): Response
     {
         // Création d'une nouvelle session de vote
         $voteSession = new TwitchChatVoteSession();
@@ -41,9 +40,6 @@ class VoteSessionController extends AbstractController
 
         $this->entityManager->persist($voteSession);
         $this->entityManager->flush();
-
-        // Envoyer un message au chat Twitch pour annoncer le début du vote
-        $this->twitchChatMessageService->sendMessage('Le vote est ouvert ! Envoyez votre vote en tapant ![nombre]');
 
         return $this->redirectToRoute('admin_vote_session_index');
     }
@@ -54,45 +50,18 @@ class VoteSessionController extends AbstractController
         $voteSession->setState(TwitchChatVoteSession::STATE_SUSPENDED);
         $this->entityManager->flush();
 
-        // Envoyer un message au chat Twitch pour annoncer la suspension du vote
-        $this->twitchChatMessageService->sendMessage('Le vote est suspendu. Merci de patienter.');
-
         return $this->redirectToRoute('admin_vote_session_index');
     }
 
+    #[Route('/admin/twitch/vote-session/{id}/resume', name: 'admin_vote_session_resume')]
     public function resume(TwitchChatVoteSession $voteSession): Response
     {
         $voteSession->setState(TwitchChatVoteSession::STATE_STARTED);
         $this->entityManager->flush();
 
-        // Envoyer un message au chat Twitch pour annoncer la reprise du vote
-        $this->twitchChatMessageService->sendMessage('Le vote reprend ! Envoyez votre vote en tapant ![nombre]');
-
         return $this->redirectToRoute('admin_vote_session_index');
     }
 
-    #[Route('/admin/twitch/vote-session/{id}/close', name: 'admin_vote_session_close')]
-    public function close(Request $request, TwitchChatVoteSession $voteSession): Response
-    {
-        if ($request->isMethod('POST')) {
-            $correctAnswer = (int) $request->request->get('correct_answer');
-            $voteSession->setCorrectAnswer($correctAnswer);
-            $voteSession->setState(TwitchChatVoteSession::STATE_ENDED);
-            $voteSession->setEndedAt(new \DateTimeImmutable());
-            $this->entityManager->flush();
-
-            // Calculer les résultats et envoyer les messages
-            $this->calculateResultsAndAnnounce($voteSession);
-
-            return $this->redirectToRoute('admin_vote_session_index');
-        }
-
-        return $this->render('admin/vote_session/close.html.twig', [
-            'vote_session' => $voteSession,
-        ]);
-    }
-
-    #[Route('/admin/twitch/vote-result/{id}/', name: 'admin_vote_session_result')]
     public function calculateResultsAndAnnounce(TwitchChatVoteSession $voteSession): void
     {
         $votes = $this->entityManager->getRepository(TwitchChatVote::class)->findBy(['twitchChatVoteSession' => $voteSession]);
@@ -147,8 +116,5 @@ class VoteSessionController extends AbstractController
             $viewer = $results[$i]['viewer'];
             $message .= "\n".($i + 1).'. '.$viewer->getId()." (+{$pointsDistribution[$i]} points)";
         }
-
-        // Envoyer le message au chat Twitch
-        $this->twitchChatMessageService->sendMessage($message);
     }
 }
