@@ -56,7 +56,7 @@ class TwitchChatBotService implements TwitchChatBotInterface
                 ],
                 'identity' => [
                     'username' => $this->twitchConfiguration->getUsername(),
-                    'password' => 'oauth:'.$accessToken,
+                    'password' => 'oauth:' . $accessToken,
                 ],
                 'channels' => [$this->twitchConfiguration->getChannel()],
             ]);
