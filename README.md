@@ -1,6 +1,7 @@
-# 🎉 Globnot.com
+# 🎉 Globnot
 
 App designed for Globnot Twitch Partner, used to share various video game resources or creative content for its viewers.
+"Work-in-progress side project, experimental prototype aimed at learning and exploring new skills. Not finished and not production-ready."  
 
 ## 📌 License
 
