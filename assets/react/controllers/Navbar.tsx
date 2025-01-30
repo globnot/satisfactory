@@ -39,19 +39,14 @@ export default function Navbar({ path, roles }) {
         {/* Menu */}
         <Menubar>
           <MenubarMenu>
-            <MenubarTrigger>Home</MenubarTrigger>
-            <MenubarContent>
-              <a href={path.satisfactory_blueprints}>
-                <MenubarItem>
-                  Twitch
-                </MenubarItem>
-              </a>
-            </MenubarContent>
+            <a href={path.home}>
+              <MenubarTrigger>Home</MenubarTrigger>
+            </a>
           </MenubarMenu>
           <MenubarMenu>
             <MenubarTrigger>Satisfactory</MenubarTrigger>
             <MenubarContent>
-              <a href={path.satisfactory_blueprints}>
+              <a href={path.satisfactoryBlueprints}>
                 <MenubarItem>
                   Blueprints
                 </MenubarItem>
@@ -62,14 +57,19 @@ export default function Navbar({ path, roles }) {
             <MenubarMenu>
               <MenubarTrigger>Admin</MenubarTrigger>
               <MenubarContent>
+                <a href={path.adminTwitch}>
+                  <MenubarItem>
+                    Twitch Admin
+                  </MenubarItem>
+                </a>
                 <a href={path.twitchOverlayWebcam}>
-                  <MenubarItem inset>
-                    Overlay
+                  <MenubarItem>
+                    Twitch Overlay
                   </MenubarItem>
                 </a>
                 <MenubarSeparator />
                 <a href={path.admin}>
-                  <MenubarItem inset>
+                  <MenubarItem>
                     Admin
                   </MenubarItem>
                 </a>
