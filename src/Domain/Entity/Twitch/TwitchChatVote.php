@@ -13,57 +13,67 @@ class TwitchChatVote
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(inversedBy: 'twitchChatVotes')]
+    private ?TwitchChatViewer $twitchChatViewer = null;
+
+    #[ORM\ManyToOne(inversedBy: 'twitchChatVotes')]
+    private ?TwitchChatVoteSession $twitchChatVoteSession = null;
+
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?int $value = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $username = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $guess = null;
-
-    public function __construct()
-    {
-        $this->createdAt = new \DateTimeImmutable();
-    }
+    #[ORM\Column]
+    private ?\DateTimeImmutable $timestamp = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getTwitchChatViewer(): ?TwitchChatViewer
     {
-        return $this->createdAt;
+        return $this->twitchChatViewer;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): static
+    public function setTwitchChatViewer(?TwitchChatViewer $twitchChatViewer): static
     {
-        $this->createdAt = $createdAt;
+        $this->twitchChatViewer = $twitchChatViewer;
 
         return $this;
     }
 
-    public function getUsername(): ?string
+    public function getTwitchChatVoteSession(): ?TwitchChatVoteSession
     {
-        return $this->username;
+        return $this->twitchChatVoteSession;
     }
 
-    public function setUsername(?string $username): static
+    public function setTwitchChatVoteSession(?TwitchChatVoteSession $twitchChatVoteSession): static
     {
-        $this->username = $username;
+        $this->twitchChatVoteSession = $twitchChatVoteSession;
 
         return $this;
     }
 
-    public function getGuess(): ?int
+    public function getValue(): ?int
     {
-        return $this->guess;
+        return $this->value;
     }
 
-    public function setGuess(?int $guess): static
+    public function setValue(int $value): static
     {
-        $this->guess = $guess;
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function getTimestamp(): ?\DateTimeImmutable
+    {
+        return $this->timestamp;
+    }
+
+    public function setTimestamp(\DateTimeImmutable $timestamp): static
+    {
+        $this->timestamp = $timestamp;
 
         return $this;
     }

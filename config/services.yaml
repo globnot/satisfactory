@@ -50,9 +50,6 @@ services:
     App\Application\Interface\Twitch\TwitchChatBotInterface:
         alias: App\Infrastructure\Service\Twitch\TwitchChatBotService
 
-    App\Application\Interface\Twitch\TwitchChatVoteInterface:
-        alias: App\Infrastructure\Service\Twitch\TwitchChatVoteService
-
 # EventListener
 
     App\Infrastructure\EventListener\TwitchExceptionListener:

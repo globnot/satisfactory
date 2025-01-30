@@ -4,5 +4,5 @@ parameters:
     twitch.broadcaster_id: '%env(TWITCH_BROADCASTER_ID)%'
     twitch.username: '%env(TWITCH_USERNAME)%'
     twitch.channel: '%env(TWITCH_CHANNEL)%'
-    twitch.connect_message: '[GUESS MY LOOT] Vous pouvez commencer vos prédictions ! Tapez !<nombre> pour participer !'
-    twitch.connect_message_repeat: 5
+    twitch.connect_message: '[GLOBOT] Connected to Globnot channel!'
+    twitch.connect_message_repeat: 1

@@ -6,8 +6,12 @@ namespace App\Infrastructure\Service\Twitch;
 
 use App\Application\Interface\Twitch\TwitchAccessTokenInterface;
 use App\Application\Interface\Twitch\TwitchChatBotInterface;
-use App\Application\Interface\Twitch\TwitchChatVoteInterface;
 use App\Configuration\TwitchConfiguration;
+use App\Domain\Entity\Twitch\TwitchChatViewer;
+use App\Domain\Entity\Twitch\TwitchChatVote;
+use App\Infrastructure\Persistence\Repository\Twitch\TwitchChatViewerRepository;
+use App\Infrastructure\Persistence\Repository\Twitch\TwitchChatVoteRepository;
+use App\Infrastructure\Persistence\Repository\Twitch\TwitchChatVoteSessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use GhostZero\Tmi\Client;
@@ -22,7 +26,9 @@ class TwitchChatBotService implements TwitchChatBotInterface
 
     public function __construct(
         private readonly TwitchAccessTokenInterface $twitchAccessTokenInterface,
-        private readonly TwitchChatVoteInterface $twitchChatVoteInterface,
+        private readonly TwitchChatViewerRepository $viewerRepository,
+        private readonly TwitchChatVoteRepository $voteRepository,
+        private readonly TwitchChatVoteSessionRepository $voteSessionRepository,
         private readonly TwitchConfiguration $twitchConfiguration,
         private readonly ManagerRegistry $managerRegistry,
         private readonly LoggerInterface $loggerInterface,
@@ -102,25 +108,52 @@ class TwitchChatBotService implements TwitchChatBotInterface
             if (preg_match('/^!(\d+)$/', $message, $matches)) {
                 $guess = (int) $matches[1];
 
-                // Enregistrement du vote
-                $success = $this->twitchChatVoteInterface->registerVote($username, $guess);
+                // Vérifier si une session de vote est en cours
+                $voteSession = $this->voteSessionRepository->findOneBy(['state' => 'started']);
 
-                if ($success) {
-                    $confirmationMessage = sprintf(
-                        '[GUESS MY LOOT] Merci %s ! Ta prédiction (%d) a été enregistrée.',
-                        $username,
-                        $guess
-                    );
+                if ($voteSession) {
+                    // Enregistrement du vote
+                    $viewer = $this->viewerRepository->findOneBy(['id' => $username]);
+
+                    if (!$viewer) {
+                        $viewer = new TwitchChatViewer();
+                        $viewer->setId($username);
+                        $this->entityManagerInterface->persist($viewer);
+                    }
+
+                    // Vérifier si le viewer a déjà voté dans cette session
+                    $existingVote = $this->voteRepository->findOneBy([
+                        'twitchChatViewer' => $viewer,
+                        'twitchChatVoteSession' => $voteSession,
+                    ]);
+
+                    if (!$existingVote) {
+                        $vote = new TwitchChatVote();
+                        $vote->setTwitchChatViewer($viewer);
+                        $vote->setTwitchChatVoteSession($voteSession);
+                        $vote->setValue($guess);
+                        $vote->setTimestamp(new \DateTimeImmutable());
+                        $this->entityManagerInterface->persist($vote);
+                        $this->entityManagerInterface->flush();
+
+                        $confirmationMessage = sprintf(
+                            '[GUESS MY LOOT] Merci %s ! Ta prédiction (%d) a été enregistrée.',
+                            $username,
+                            $guess
+                        );
+                    } else {
+                        $confirmationMessage = sprintf(
+                            '[GUESS MY LOOT] Attention %s, tu as déjà voté !',
+                            $username
+                        );
+                    }
+
+                    // Envoi du message dans le chat
+                    $this->client->say($this->twitchConfiguration->getChannel(), $confirmationMessage);
                 } else {
-                    $confirmationMessage = sprintf(
-                        '[GUESS MY LOOT] Attention %s, tu as déjà voté !',
-                        $username
-                    );
-                    $this->resetEntityManager();
+                    // Aucune session de vote active
+                    $this->loggerInterface->info('Aucune session de vote active. Vote de {username} ignoré.', ['username' => $username]);
                 }
-
-                // Envoi du message dans le chat
-                $this->client->say($this->twitchConfiguration->getChannel(), $confirmationMessage);
             } elseif (0 === strcasecmp($message, '!stop') && 0 === strcasecmp($username, $this->twitchConfiguration->getUsername())) {
                 $this->stop();
             }
